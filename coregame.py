@@ -93,6 +93,8 @@ class GameManager:
 
         for racer in GameManager.racers:
             racer.update(dt, current_time, GameManager.state == "racing")
+        
+        SpellManager.update(screen)
         GameManager.racers.draw(screen)
 
         #display player's money
@@ -143,6 +145,7 @@ class GameManager:
     def start_game():
         GameManager.state = "racing"
         BotManager.add_bots(random.randint(4, 10))
+        SpellManager.generate_spells(random.randint(2, 3))
     
     @staticmethod
     def generate_racers():
@@ -186,25 +189,41 @@ class Spell(pygame.sprite.Sprite):
     hidden_spell_sprite = pygame.image.load("./Assets/HiddenSpell.png")
 
     def __init__(self, pos, name, effect) -> None:
+        pygame.sprite.Sprite.__init__(self)
+
         self.pos = pos
         self.name = name
         self.effect = effect
 
     def apply(self, racer):
         self.effect(racer)
-    
+
 class SpellManager:
     spells = pygame.sprite.Group()
 
+    start_spawning_spell_offset = 100
+    stop_spawning_spell_offset = 100
     @staticmethod
     def generate_spells(num_spells):
         '''Generate @num_spells spells on each lane'''
         for lane in range(5):
-            lane_y_pos = 100 + lane * 100
-            for spell_index in range(num_spells):    
-                spell_x_pos = random.randint(GameManager.start_point, GameManager.end_point)      
+            lane_y_pos = 100 + lane * 100 + 15
+            possible_positions = list(range(GameManager.start_point + SpellManager.start_spawning_spell_offset, GameManager.end_point - SpellManager.stop_spawning_spell_offset, 50))
+            for spell_index in range(num_spells):
+                if not possible_positions:
+                    break
+                spell_x_pos = random.choice(possible_positions)
+                possible_positions.remove(spell_x_pos)
                 spell = Spell((spell_x_pos, lane_y_pos), "placeholder", SpellManager.slow)     
-                spell.add(SpellManager.spells) 
+                spell.add(SpellManager.spells)
+
+    def update(screen):
+        for spell in SpellManager.spells:
+            screen.blit(Spell.hidden_spell_sprite, spell.pos)
+
+    @staticmethod
+    def reset():
+        SpellManager.spells.empty()
 
     def slow(racer):
         racer.speed_modifier = 0.5
