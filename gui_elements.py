@@ -29,4 +29,3 @@ class Button(pygame.sprite.Sprite):
     def click(self):
         if self.action is not None:
             self.action_return_value = self.action()
-            
