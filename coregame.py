@@ -25,7 +25,7 @@ class CoreGame:
             if GameManager.state == 'betting':
                 GameManager.betting_screen(screen, events, textinput)
             elif GameManager.state == 'racing':
-                GameManager.racing_screen(dt, current_time, screen)
+                GameManager.racing_screen(dt, current_time, screen, events)
             elif GameManager.state == 'postgame':
                 GameManager.postgame(screen)
             elif GameManager.state == 'minigame':
@@ -88,13 +88,13 @@ class GameManager:
 
         UserInput.handle_betting_input(events, textinput)
 
-    def racing_screen(dt, current_time, screen):
+    def racing_screen(dt, current_time, screen, events):
         Gui.reset_elements()
 
         for racer in GameManager.racers:
             racer.update(dt, current_time, GameManager.state == "racing")
         
-        SpellManager.update(screen)
+        SpellManager.update(screen, events)
         GameManager.racers.draw(screen)
 
         #display player's money
@@ -188,15 +188,32 @@ class GameManager:
 class Spell(pygame.sprite.Sprite):
     hidden_spell_sprite = pygame.image.load("./Assets/HiddenSpell.png")
 
-    def __init__(self, pos, name, effect) -> None:
+    def __init__(self, pos, effect, id) -> None:
         pygame.sprite.Sprite.__init__(self)
 
         self.pos = pos
-        self.name = name
         self.effect = effect
+        self.image = Spell.hidden_spell_sprite
+        
+        # Create a custom event to hide the spell after 1 second
+        # Id is used to differentiate between the different spells (so that they don't all hide at the same time)
+        self.hide_event = pygame.USEREVENT + id
+
+    def update(self, events):
+        # Check for the hide event
+        for event in events:
+            if event.type == self.hide_event:
+                print("Found hide_event")
+                self.kill()
+                pygame.time.set_timer(self.hide_event, 0)  # Stop the timer
 
     def apply(self, racer):
         self.effect(racer)
+
+    def reveal(self):
+        self.image = pygame.transform.scale(pygame.Surface.convert_alpha(pygame.image.load(f"./Assets/Spells/{self.effect.__name__}.png")), (32, 32))
+
+        pygame.time.set_timer(self.hide_event, 500)  # 500 milliseconds
 
 class SpellManager:
     spells = pygame.sprite.Group()
@@ -208,25 +225,36 @@ class SpellManager:
         '''Generate @num_spells spells on each lane'''
         for lane in range(5):
             lane_y_pos = 100 + lane * 100 + 15
+            #possible positions for spells to spawn, each 50px away from eachother
             possible_positions = list(range(GameManager.start_point + SpellManager.start_spawning_spell_offset, GameManager.end_point - SpellManager.stop_spawning_spell_offset, 50))
             for spell_index in range(num_spells):
                 if not possible_positions:
                     break
                 spell_x_pos = random.choice(possible_positions)
                 possible_positions.remove(spell_x_pos)
-                spell = Spell((spell_x_pos, lane_y_pos), "placeholder", SpellManager.slow)     
+                spell = Spell((spell_x_pos, lane_y_pos), SpellManager.pick_random_spell(), 10*lane + spell_index)     
                 spell.add(SpellManager.spells)
 
-    def update(screen):
+    def update(screen, events):
         for spell in SpellManager.spells:
-            screen.blit(Spell.hidden_spell_sprite, spell.pos)
+            spell.update(events)
+            screen.blit(spell.image, spell.pos)
 
     @staticmethod
     def reset():
         SpellManager.spells.empty()
 
+    @staticmethod
     def slow(racer):
         racer.speed_modifier = 0.5
+
+    def speed(racer):
+        racer.speed_modifier = 1.8
+
+    spell_effects = [slow, speed]
+
+    def pick_random_spell():
+        return random.choice(SpellManager.spell_effects)
 
 class Gui:
     buttons = []
@@ -315,6 +343,8 @@ class Racer(pygame.sprite.Sprite):
         # a list of (gambler, money_bet) tuples
         self.gambled_gamblers = []
 
+        self.affected_spells = pygame.sprite.Group()
+
         self.running = False
         self.finished_race = False
 
@@ -322,6 +352,14 @@ class Racer(pygame.sprite.Sprite):
         self.check_if_finished()
 
         self.update_speed(current_time)
+        #Check for collision with spells
+        for spell in SpellManager.spells:
+            if self.rect.collidepoint(spell.pos):
+                if not spell in self.affected_spells:
+                    self.affected_spells.add(spell)
+                    spell.apply(self)
+                    spell.reveal()
+                
         if racing and not self.finished_race:
             self.move(dt)
             
@@ -338,6 +376,13 @@ class Racer(pygame.sprite.Sprite):
         self.speed_func_b = random.randint(-10, 10)
         
     def update_speed(self, current_time):
+        # if the speed_modifier is less than 1, gradually change it to 1
+        if self.speed_modifier < 1:
+            self.speed_modifier += 0.005
+        elif self.speed_modifier > 1:
+            self.speed_modifier -= 0.005
+
+        # speed = speed_modifier * 20 * (3 + cos(at) + sin(bt) + sin(at)cos(bt))
         # * 20 because the speed is too slow
         self.speed = self.speed_modifier * 20 * (3 + math.cos(self.speed_func_a * current_time) + math.sin(self.speed_func_b * current_time) + math.sin(self.speed_func_a * current_time) * math.cos(self.speed_func_b * current_time))
 
