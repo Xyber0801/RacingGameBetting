@@ -39,12 +39,14 @@ class CoreGame:
             dt = clock.tick(60) / 1000
 
 class GameManager:
-    # betting, racing, postgame, minigame
+    # 4 states: betting, racing, postgame, minigame
     state = None
+
     player = None
 
     winner_racer = None
 
+    # Of the race track
     start_point = 100
     end_point = 900
 
@@ -246,12 +248,21 @@ class SpellManager:
 
     @staticmethod
     def slow(racer):
-        racer.speed_modifier = 0.5
+        racer.speed_modifier -= 0.5
 
+    @staticmethod
     def speed(racer):
-        racer.speed_modifier = 1.8
+        racer.speed_modifier += 0.8
 
-    spell_effects = [slow, speed]
+    @staticmethod
+    def flash(racer):
+        '''Teleport the racer to a random position 100px around the racer's current position. This new pos should be at least 50px from current pos'''
+        new_pos = random.randint(racer.rect.x - 100, racer.rect.x + 100)
+        while abs(new_pos - racer.rect.x) < 50:
+            new_pos = random.randint(racer.rect.x - 100, racer.rect.x + 100)
+        racer.rect.x = new_pos
+
+    spell_effects = [slow, speed, flash]
 
     def pick_random_spell():
         return random.choice(SpellManager.spell_effects)
