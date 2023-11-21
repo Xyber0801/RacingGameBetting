@@ -7,6 +7,9 @@ import gui_elements
 class CoreGame:
     running = False
 
+    events = None
+    dt = 0
+
     @staticmethod
     def start(screen, clock, textinput):
         GameManager.init()
@@ -15,23 +18,23 @@ class CoreGame:
         print("start coregame")
         while running:
             current_time = pygame.time.get_ticks() / 1000
-            events = pygame.event.get()
+            CoreGame.events = pygame.event.get()
 
             #green background
             screen.fill((30, 146, 46))
 
-            GameManager.update(screen, events)
+            GameManager.update(screen)
 
             if GameManager.state == 'betting':
-                GameManager.betting_screen(screen, events, textinput)
+                GameManager.betting_screen(screen, textinput)
             elif GameManager.state == 'racing':
-                GameManager.racing_screen(dt, current_time, screen, events)
+                GameManager.racing_screen(dt, current_time, screen)
             elif GameManager.state == 'postgame':
                 GameManager.postgame(screen)
             elif GameManager.state == 'minigame':
                 GameManager.minigame(screen)
             
-            for event in events:
+            for event in CoreGame.events:
                 if event.type == pygame.QUIT:
                     running = False
 
@@ -59,10 +62,10 @@ class GameManager:
         GameManager.state = 'betting'
 
     @staticmethod
-    def update(screen, events):
-        Gui.update_buttons(screen, events)  
+    def update(screen):
+        Gui.update_buttons(screen)  
      
-    def betting_screen(screen, events, textinput):
+    def betting_screen(screen, textinput):
         Gui.reset_elements()
 
         if GameManager.player.money < 100:
@@ -82,21 +85,21 @@ class GameManager:
             button = gui_elements.Button(50 + i * 200, 100, 80, 80, (255, 255, 255), f"Bet on {i + 1}")
             Gui.buttons.append(button)
 
-        textinput.update(events)
+        textinput.update(CoreGame.events)
         screen.blit(textinput.surface, (100 + bet_amount_text.get_width(), 600))
         screen.blit(bet_amount_text, bet_amount_text_pos)
         screen.blit(bet_on_who_text, bet_on_who_text_pos)
         screen.blit(player_money_text, (0, 0))
 
-        UserInput.handle_betting_input(events, textinput)
+        UserInput.handle_betting_input(textinput)
 
-    def racing_screen(dt, current_time, screen, events):
+    def racing_screen(dt, current_time, screen):
         Gui.reset_elements()
 
         for racer in GameManager.racers:
-            racer.update(dt, current_time, GameManager.state == "racing")
+            racer.update(dt, current_time, GameManager.state == "racing")              
         
-        SpellManager.update(screen, events)
+        SpellManager.update(screen)
         GameManager.racers.draw(screen)
 
         #display player's money
@@ -201,9 +204,9 @@ class Spell(pygame.sprite.Sprite):
         # Id is used to differentiate between the different spells (so that they don't all hide at the same time)
         self.hide_event = pygame.USEREVENT + id
 
-    def update(self, events):
+    def update(self):
         # Check for the hide event
-        for event in events:
+        for event in CoreGame.events:
             if event.type == self.hide_event:
                 print("Found hide_event")
                 self.kill()
@@ -237,9 +240,9 @@ class SpellManager:
                 spell = Spell((spell_x_pos, lane_y_pos), SpellManager.pick_random_spell(), 10*lane + spell_index)     
                 spell.add(SpellManager.spells)
 
-    def update(screen, events):
+    def update(screen):
         for spell in SpellManager.spells:
-            spell.update(events)
+            spell.update()
             screen.blit(spell.image, spell.pos)
 
     @staticmethod
@@ -262,10 +265,25 @@ class SpellManager:
             new_pos = random.randint(racer.rect.x - 100, racer.rect.x + 100)
         racer.rect.x = new_pos
 
-    spell_effects = [slow, speed, flash]
+    def stun(racer):
+        pygame.time.set_timer(racer.stun_event, 2000)
+        racer.stunned = True
 
+    def turnaround(racer):
+        pygame.time.set_timer(racer.turnaround_event, 1000)
+        racer.facing_right = False
+
+    def tp_start(racer):
+        racer.rect.x = GameManager.start_point
+
+    def tp_end(racer):
+        racer.rect.x = GameManager.end_point - racer.width
+
+    spell_effects =      [slow, speed, flash, stun, turnaround, tp_start, tp_end]
+    spells_probability = [0.25, 0.25,  0.2,  0.149, 0.149,      0.001,    0.001]
     def pick_random_spell():
-        return random.choice(SpellManager.spell_effects)
+        return random.choices(SpellManager.spell_effects, weights=SpellManager.spells_probability)[0]
+        #return random.choice(SpellManager.spell_effects)
 
 class Gui:
     buttons = []
@@ -276,10 +294,10 @@ class Gui:
         Gui.texts = []
 
     @staticmethod
-    def update_buttons(screen, events):
+    def update_buttons(screen):
         for button in Gui.buttons:
             screen.blit(button.image, button.rect)
-            for event in events:
+            for event in CoreGame.events:
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:            
                     mouse_pos = event.pos          
                     if button.rect.collidepoint(mouse_pos):
@@ -330,7 +348,6 @@ class BotManager:
 
 class Racer(pygame.sprite.Sprite):
     def __init__(self, x, y) -> None:
-        self.name="placeholder"
         self.width = 60
         self.height = 60
             
@@ -343,11 +360,16 @@ class Racer(pygame.sprite.Sprite):
         self.image = self.idle_sprites[0]
         self.rect = self.image.get_rect()  
         self.rect.x = x
-        self.rect.y = y  
+        self.rect.y = y
+        self.facing_right = True
 
         self.speed = 0
         self.speed_modifier = 1
         self.generate_speed_function()
+        self.stunned = False
+        self.stun_event = pygame.USEREVENT + self.rect.y
+
+        self.turnaround_event = pygame.USEREVENT + 10 * self.rect.y
 
         #TODO: perk system
         #self.perk = perk
@@ -363,6 +385,15 @@ class Racer(pygame.sprite.Sprite):
         self.check_if_finished()
 
         self.update_speed(current_time)
+
+        for event in CoreGame.events:
+            if event.type == self.stun_event:
+                    self.stunned = False
+                    pygame.time.set_timer(self.stun_event, 0)  # Stop the timer
+            if event.type == self.turnaround_event:
+                    self.facing_right = True
+                    pygame.time.set_timer(self.turnaround_event, 0)  # Stop the timer
+
         #Check for collision with spells
         for spell in SpellManager.spells:
             if self.rect.collidepoint(spell.pos):
@@ -377,7 +408,7 @@ class Racer(pygame.sprite.Sprite):
         self.update_image()
 
     def check_if_finished(self):
-        if self.rect.x + 60 >= GameManager.end_point:
+        if self.rect.x + self.width >= GameManager.end_point:
             self.finished_race = True
             self.running = False
 
@@ -398,8 +429,14 @@ class Racer(pygame.sprite.Sprite):
         self.speed = self.speed_modifier * 20 * (3 + math.cos(self.speed_func_a * current_time) + math.sin(self.speed_func_b * current_time) + math.sin(self.speed_func_a * current_time) * math.cos(self.speed_func_b * current_time))
 
     def move(self, dt):
+        if self.stunned:
+            return
+        
         self.running = True
-        self.rect.x += self.speed * dt
+        if self.facing_right:
+            self.rect.x += self.speed * dt
+        else:
+            self.rect.x -= self.speed * dt
 
     def update_image(self):
         if self.running:
@@ -416,11 +453,15 @@ class Racer(pygame.sprite.Sprite):
             self.sprite_index += 1
             if self.sprite_index >= len(self.idle_sprites) * 15:
                 self.sprite_index = 0
+
+        if not self.facing_right:
+            self.image = pygame.transform.flip(self.image, True, False)
             
     def get_total_money_bet(self):
         return sum([gambler[1] for gambler in self.gambled_gamblers])
     
 class Gambler:
+    '''A gambler is a person who bets on a racer'''
     def __init__(self, money, name = 'lol') -> None:
         self.name = name
         self.money = money
@@ -450,17 +491,16 @@ class UserInput:
     bet_racer_index = None
 
     @staticmethod
-    def handle_betting_input(events, textinput):
-        for event in events:
+    def handle_betting_input(textinput):
+        for event in CoreGame.events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 if UserInput.bet_racer_index != None:
                     if GameManager.player.place_bet(GameManager.racers.sprites()[UserInput.bet_racer_index], int(textinput.value)):
                         GameManager.start_game()
                     
-
             #left click    
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:            
                 mouse_pos = event.pos          
                 for button in Gui.buttons:          
                     if button.rect.collidepoint(mouse_pos):                    
-                        UserInput.bet_racer_index = int(button.text[-1])-1
+                        UserInput.bet_racer_index = int(button.text[-1]) - 1
