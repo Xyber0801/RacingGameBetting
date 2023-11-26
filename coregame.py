@@ -65,7 +65,6 @@ class GameManager:
         GameManager.generate_racers(CoreGame.char_set)
         GameManager.player = Gambler(1000, 'Player')
         GameManager.state = 'betting'
-        GameManager.finished_racers = pygame.sprite.Group()
 
     @staticmethod
     def update(screen):
@@ -95,7 +94,8 @@ class GameManager:
                 racer = Racer(50 + i * 250, 100, CoreGame.char_set, i)
                 racer.add(GameManager.racers_showcase)
         else:
-            GameManager.racers_showcase.update(CoreGame.dt, pygame.time.get_ticks() / 1000, False)
+            for racer in GameManager.racers:
+                racer.update_image()
             GameManager.racers_showcase.draw(screen)
 
         #betting buttons
@@ -127,6 +127,7 @@ class GameManager:
         player_money_text_pos = (0, 0)
         screen.blit(player_money_text, player_money_text_pos)
 
+        print(GameManager.check_end_game())
         if GameManager.check_end_game():
             GameManager.state = 'postgame'
         
@@ -207,13 +208,17 @@ class GameManager:
     @staticmethod
     def check_end_game():
         """Check if every racer has finished the race, if so, return true, else return false"""
-        if len(GameManager.finished_racers) == len(GameManager.racers):
+        print(str(len(GameManager.finished_racers)) + ' ' + str(len(GameManager.racers)))
+
+        if len(GameManager.finished_racers) == len(GameManager.racers) and len(GameManager.finished_racers) != 0:
             return True
 
     @staticmethod
     def reset():
-        GameManager.state = 'betting'
         GameManager.racers.empty()
+        GameManager.racers_showcase.empty()
+        GameManager.finished_racers.empty()
+        GameManager.state = 'betting'
         GameManager.generate_racers(CoreGame.char_set)
         GameManager.player.reset()
 
@@ -313,6 +318,7 @@ class SpellManager:
 
     spell_effects =      [slow, speed, flash, stun, turnaround, tp_start, tp_end]
     spells_probability = [0.25, 0.25,  0.2,  0.149, 0.149,      0.001,    0.001]
+
     def pick_random_spell():
         return random.choices(SpellManager.spell_effects, weights=SpellManager.spells_probability)[0]
 
@@ -386,7 +392,8 @@ class Racer(pygame.sprite.Sprite):
         self.idle_sprites = charset[lane + 5]
         self.sprite_index = 0
         self.idle_sprite_index = 0         
-        
+        self.lane = lane
+
         self.image = self.idle_sprites[0]
         self.rect = self.image.get_rect()  
         self.rect.x = x
@@ -444,6 +451,7 @@ class Racer(pygame.sprite.Sprite):
 
     def check_if_finished(self):
         if self.rect.x + self.rect.width >= CoreGame.background.end_point:
+            print(str(self.lane) + " finished")
             self.finished_race = True
             self.running = False
             self.add(GameManager.finished_racers)
