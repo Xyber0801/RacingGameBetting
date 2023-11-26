@@ -76,7 +76,7 @@ class Minigame:
 
             base.move()
             
-        pygame.display.set_mode((1000, 800))
+        pygame.display.set_mode((1280, 720))
         
         return score
 
