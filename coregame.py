@@ -3,6 +3,8 @@ import random
 import math
 from minigame import Minigame
 import graphics_elements
+import utils
+import constants as c
 
 class CoreGame:
     running = False
@@ -63,12 +65,14 @@ class GameManager:
     def init():
         '''Initialize the game'''        
         GameManager.generate_racers(CoreGame.char_set)
-        GameManager.player = Gambler(1000, 'Player')
+        GameManager.player = Gambler(300, 'Player')
         GameManager.state = 'betting'
 
     @staticmethod
     def update(screen):
         Gui.update_buttons(screen)  
+        if GameManager.finished_racers.sprites():
+            CoreGame.screen.blit(c.winner_crown, (GameManager.finished_racers.sprites()[0].rect.x+16, GameManager.finished_racers.sprites()[0].rect.y+30))
      
     def betting_screen(screen, textinput):
         '''Displays and handles the betting screen'''
@@ -94,7 +98,7 @@ class GameManager:
                 racer = Racer(50 + i * 250, 100, CoreGame.char_set, i)
                 racer.add(GameManager.racers_showcase)
         else:
-            for racer in GameManager.racers:
+            for racer in GameManager.racers_showcase:
                 racer.update_image()
             GameManager.racers_showcase.draw(screen)
 
@@ -104,6 +108,17 @@ class GameManager:
             Gui.buttons.append(button)
         
         textinput.update(CoreGame.events)
+
+        #What others have bet
+        if not BotManager.bots:
+            BotManager.add_bots(random.randint(1, 4))
+        for i in range(5):
+            racer = GameManager.racers.sprites()[i]
+            font = pygame.font.SysFont(None, 24)
+            racer_total_bet_text = font.render(f"Other gamblers have bet \n ${racer.get_total_money_bet()} on this racer.", True, pygame.Color("black"))
+            racer_total_bet_text_pos = (50 + i * 250, 400)
+            #CoreGame.screen.blit(racer_total_bet_text, racer_total_bet_text_pos)
+            utils.renderTextCenteredAt(f"Other gamblers have bet \n ${racer.get_total_money_bet()} on this racer.", font, pygame.Color("black"), 100 + i * 250, 400, CoreGame.screen, 100)
 
         #display all elements
         screen.blit(textinput.surface, (100 + bet_amount_text.get_width(), 600))
@@ -120,14 +135,17 @@ class GameManager:
         CoreGame.screen.blit(CoreGame.background.image, (0, 0))
         SpellManager.update(screen)
         GameManager.racers.update(dt, current_time, GameManager.state == 'racing')     
+        #draw racers
         GameManager.racers.draw(screen)
+        for racer in GameManager.racers:
+            racer.draw_status_effect_sprite()
+        
         #display player's money
         font = pygame.font.Font(None, 32)
         player_money_text = font.render("Player's Money: $" + str(GameManager.player.money), True, pygame.Color('black'))
         player_money_text_pos = (0, 0)
         screen.blit(player_money_text, player_money_text_pos)
 
-        print(GameManager.check_end_game())
         if GameManager.check_end_game():
             GameManager.state = 'postgame'
         
@@ -175,7 +193,6 @@ class GameManager:
     def start_game():
         '''Starts racing'''
         GameManager.state = "racing"
-        BotManager.add_bots(random.randint(4, 10))
         SpellManager.generate_spells(random.randint(3, 5))
     
     @staticmethod
@@ -208,8 +225,6 @@ class GameManager:
     @staticmethod
     def check_end_game():
         """Check if every racer has finished the race, if so, return true, else return false"""
-        print(str(len(GameManager.finished_racers)) + ' ' + str(len(GameManager.racers)))
-
         if len(GameManager.finished_racers) == len(GameManager.racers) and len(GameManager.finished_racers) != 0:
             return True
 
@@ -292,7 +307,7 @@ class SpellManager:
 
     @staticmethod
     def speed(racer):
-        racer.speed_modifier += 0.8
+        racer.speed_modifier += 0.5
 
     @staticmethod
     def flash(racer):
@@ -369,8 +384,14 @@ class BotManager:
     bots = []
 
     @staticmethod
-    def add_bots(num_bots):
-        for i in range(num_bots):
+    def add_bots(num_extra_bots):
+        #Place a bet on every racer (so that no racer have $0 bet on them)
+        for i in range(5):
+            bot = Gambler(1000, 'Bot ' + str(i))
+            bot.place_bet(GameManager.racers.sprites()[i], random.randint(100, 300))
+            BotManager.bots.append(bot)
+        #Randomly places bet on racers
+        for i in range(num_extra_bots):
             bot = Gambler(1000, 'Bot ' + str(i))
             bot.place_bet(GameManager.racers.sprites()[random.randint(0, len(GameManager.racers)-1)], random.randint(100, 300))
             BotManager.bots.append(bot)
@@ -398,8 +419,7 @@ class Racer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()  
         self.rect.x = x
         self.rect.y = y
-        if (self.rect.width > 64):
-            self.rect.width = 64
+        self.rect.width = charset[10]
         self.collide_rect = pygame.Rect(self.rect.x, self.rect.y+64, self.rect.width, self.rect.height - 64)
         self.facing_right = True
 
@@ -446,12 +466,11 @@ class Racer(pygame.sprite.Sprite):
                 
         if racing and not self.finished_race:
             self.move(dt)
-            
+                    
         self.update_image()
 
     def check_if_finished(self):
         if self.rect.x + self.rect.width >= CoreGame.background.end_point:
-            print(str(self.lane) + " finished")
             self.finished_race = True
             self.running = False
             self.add(GameManager.finished_racers)
@@ -463,10 +482,10 @@ class Racer(pygame.sprite.Sprite):
         
     def update_speed(self, current_time):
         # if the speed_modifier is less than 1, gradually change it to 1
-        if self.speed_modifier < 1:
-            self.speed_modifier += 0.005
+        if self.speed_modifier < 1:      
+            self.speed_modifier += 0.0078125 # 0.0078125 = 1/128 (floating point shananigans)
         elif self.speed_modifier > 1:
-            self.speed_modifier -= 0.005
+            self.speed_modifier -= 0.0078125 # 0.0078125 = 1/128 (floating point shananigans)
 
         # speed = speed_modifier * 20 * (3 + cos(at) + sin(bt) + sin(at)cos(bt))
         # * 20 because the speed is too slow
@@ -511,7 +530,17 @@ class Racer(pygame.sprite.Sprite):
 
         if not self.facing_right:
             self.image = pygame.transform.flip(self.image, True, False)
-            
+    
+    def draw_status_effect_sprite(self):
+        if self.stunned:
+            CoreGame.screen.blit(c.stun_effect, (self.rect.x, self.rect.y + 40))
+            return            
+
+        if self.speed_modifier > 1:
+            CoreGame.screen.blit(c.speed_effect, (self.rect.x + 30, self.rect.y + 40))
+        elif self.speed_modifier < 1:
+            CoreGame.screen.blit(c.slow_effect, (self.rect.x + 30, self.rect.y + 40))
+
     def get_total_money_bet(self):
         return sum([gambler[1] for gambler in self.gambled_gamblers])
     

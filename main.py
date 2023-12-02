@@ -14,7 +14,8 @@ textinput = pygame_textinput.TextInputVisualizer()
 pygame.key.set_repeat(200, 25)
 
 def __main__():
-    CoreGame.start(screen, clock, textinput, c.forest_short, c.animal_set)
+    CoreGame.start(screen, clock, textinput, c.grassland_long, c.car_set)
+    
 
 if __name__ == '__main__':
     __main__()
