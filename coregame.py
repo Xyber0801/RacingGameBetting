@@ -303,11 +303,11 @@ class SpellManager:
 
     @staticmethod
     def slow(racer):
-        racer.speed_modifier -= 35
+        racer.flat_speed_modifier -= 35
 
     @staticmethod
     def speed(racer):
-        racer.speed_modifier += 35
+        racer.flat_speed_modifier += 35
 
     @staticmethod
     def flash(racer):
