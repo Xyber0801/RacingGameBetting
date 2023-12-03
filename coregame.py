@@ -303,11 +303,11 @@ class SpellManager:
 
     @staticmethod
     def slow(racer):
-        racer.speed_modifier -= 0.5
+        racer.speed_modifier -= 35
 
     @staticmethod
     def speed(racer):
-        racer.speed_modifier += 0.5
+        racer.speed_modifier += 35
 
     @staticmethod
     def flash(racer):
@@ -336,6 +336,10 @@ class SpellManager:
 
     def pick_random_spell():
         return random.choices(SpellManager.spell_effects, weights=SpellManager.spells_probability)[0]
+
+class BuffManager():
+    def speed_buff(racer):
+        racer.multiple_speed_modifier += 0.1
 
 class Gui:
     buttons = []
@@ -424,7 +428,8 @@ class Racer(pygame.sprite.Sprite):
         self.facing_right = True
 
         self.speed = 0
-        self.speed_modifier = 1
+        self.flat_speed_modifier = 0
+        self.multiple_speed_modifier = 1
         self.generate_speed_function()
         self.stunned = False
         self.stun_event = pygame.USEREVENT + self.rect.y
@@ -481,15 +486,14 @@ class Racer(pygame.sprite.Sprite):
         self.speed_func_b = random.randint(-10, 10)
         
     def update_speed(self, current_time):
-        # if the speed_modifier is less than 1, gradually change it to 1
-        if self.speed_modifier < 1:      
-            self.speed_modifier += 0.0078125 # 0.0078125 = 1/128 (floating point shananigans)
-        elif self.speed_modifier > 1:
-            self.speed_modifier -= 0.0078125 # 0.0078125 = 1/128 (floating point shananigans)
+        if self.flat_speed_modifier < 0:      
+            self.flat_speed_modifier += 0.25 
+        elif self.flat_speed_modifier > 0:
+            self.flat_speed_modifier -= 0.25 #
 
-        # speed = speed_modifier * 20 * (3 + cos(at) + sin(bt) + sin(at)cos(bt))
+        # speed = multiple_speed_modifier(flat_speed_modifier + 20 * (3 + cos(at) + sin(bt) + sin(at)cos(bt)))
         # * 20 because the speed is too slow
-        self.speed = self.speed_modifier * 20 * (3 + math.cos(self.speed_func_a * current_time) + math.sin(self.speed_func_b * current_time) + math.sin(self.speed_func_a * current_time) * math.cos(self.speed_func_b * current_time))
+        self.speed = self.multiple_speed_modifier * (self.flat_speed_modifier + 20 * (3 + math.cos(self.speed_func_a * current_time) + math.sin(self.speed_func_b * current_time) + math.sin(self.speed_func_a * current_time) * math.cos(self.speed_func_b * current_time)))
 
     def move(self, dt):
         if self.stunned:
@@ -536,9 +540,9 @@ class Racer(pygame.sprite.Sprite):
             CoreGame.screen.blit(c.stun_effect, (self.rect.x, self.rect.y + 40))
             return            
 
-        if self.speed_modifier > 1:
+        if self.flat_speed_modifier > 0:
             CoreGame.screen.blit(c.speed_effect, (self.rect.x + 30, self.rect.y + 40))
-        elif self.speed_modifier < 1:
+        elif self.flat_speed_modifier < 0:
             CoreGame.screen.blit(c.slow_effect, (self.rect.x + 30, self.rect.y + 40))
 
     def get_total_money_bet(self):

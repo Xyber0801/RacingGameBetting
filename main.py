@@ -15,7 +15,6 @@ pygame.key.set_repeat(200, 25)
 
 def __main__():
     CoreGame.start(screen, clock, textinput, c.grassland_long, c.car_set)
-    
 
 if __name__ == '__main__':
     __main__()
