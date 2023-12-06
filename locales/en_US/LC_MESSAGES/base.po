@@ -1,0 +1,48 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2023-12-05 11:39+0700\n"
+"PO-Revision-Date: 2023-12-05 12:05+0700\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: coregame.py\n"
+"X-Poedit-SearchPath-2: minigame.py\n"
+
+#: coregame.py:93
+msgid "Bet Amount:"
+msgstr "Bet Amount:"
+
+#: coregame.py:98
+msgid "Bet on racer: {}"
+msgstr "Bet on racer: {}"
+
+#: coregame.py:98
+msgid "Not selected yet"
+msgstr "Not selected yet"
+
+#: coregame.py:104 coregame.py:172 coregame.py:195 coregame.py:216
+msgid "Player's Money: ${}"
+msgstr "Player's Money: ${}"
+
+#: coregame.py:134 coregame.py:140
+msgid ""
+"Other gamblers have bet \n"
+" ${} on this racer."
+msgstr ""
+"Other gamblers have bet \n"
+" ${} on this racer."
+
+#: coregame.py:219
+msgid "You don't have enough money to bet, play a minigame to get more money"
+msgstr "You don't have enough money to bet, play a minigame to get more money"
+
+#: coregame.py:223
+msgid "Minigame"
+msgstr "Minigame"
