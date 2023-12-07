@@ -60,6 +60,9 @@ class GameManager:
     state = None
 
     player = None
+    player_bet_amount = 0
+    renaming = False
+    renaming_who = None
 
     # A group of all the racers
     racers = pygame.sprite.Group()
@@ -82,7 +85,31 @@ class GameManager:
             CoreGame.screen.blit(c.winner_crown, winner_crown_pos)
      
     def betting_screen(screen, textinput):
-        '''Displays and handles the betting screen'''
+        """Displays and handles the betting screen"""
+
+        def rename(racer):
+            GameManager.renaming = True
+            GameManager.renaming_who = racer
+
+        if GameManager.renaming:
+            for event in CoreGame.events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:  # Update racer's name on Enter key press
+                        GameManager.renaming_who.name = textinput.value
+                        textinput.value = ""
+                        GameManager.renaming = False
+                        break
+                    elif event.key == pygame.K_ESCAPE:  # Cancel renaming on Escape key press
+                        GameManager.renaming = False
+                        break
+
+            # Update text input with CoreGame events
+            textinput.update(CoreGame.events)
+            screen.blit(textinput.surface, (400, 600))
+
+        def select_racer(racer):
+            GameManager.player.bet_on_who = racer
+
         Gui.reset_elements()
 
         if GameManager.player.money < 100:
@@ -93,12 +120,11 @@ class GameManager:
 
         #betting texts
         font = pygame.font.Font(None, 32)
-        bet_amount_text = font.render(_("Bet Amount:"), True, pygame.Color('black'))
+        bet_amount_text = font.render(_("Bet Amount: {}").format(GameManager.player_bet_amount), True, pygame.Color('black'))
         bet_amount_text_pos = (100, 600)
-        import gettext
         # Render the text
         bet_on_who_text = font.render(
-            _("Bet on racer: {}").format(UserInput.bet_racer_index + 1 if UserInput.bet_racer_index is not None else _("Not selected yet")),
+            _("Bet on racer: {}").format(GameManager.player.bet_on_who.name if GameManager.player.bet_on_who is not None else _("Not selected yet")),
             True,
             pygame.Color('black')
         )
@@ -109,22 +135,41 @@ class GameManager:
             pygame.Color('black')
         )
 
+        #display racers name
+        for i in range(5):
+            racer_name_text = font.render(
+                GameManager.racers.sprites()[i].name,
+                True,
+                pygame.Color('black')
+            )
+            racer_name_text_pos = (50 + i * 250, 50)
+            screen.blit(racer_name_text, racer_name_text_pos)
+
         #display racers
         if not GameManager.racers_showcase.sprites():
             for i in range(5):
-                racer = Racer(50 + i * 250, 100, CoreGame.charset, i)
+                racer = Racer(50 + i * 250, 50, CoreGame.charset, i)
                 racer.add(GameManager.racers_showcase)
         else:
             for racer in GameManager.racers_showcase:
                 racer.update_image()
             GameManager.racers_showcase.draw(screen)
 
-        #betting buttons
+        #betting buttons and rename buttons
         for i in range(5):
-            button = graphics_elements.Button(50 + i * 250, 300, 100, 80, (255, 255, 255), f"Bet on {i + 1}")
-            Gui.buttons.append(button)
+            betting_button = graphics_elements.Button(50 + i * 250, 350, 100, 80, (255, 255, 255), f"Bet on {i + 1}", select_racer, GameManager.racers.sprites()[i])
+            Gui.buttons.append(betting_button)
+
+            # Create rename button
+            rename_button = graphics_elements.Button(50 + i * 250, 450, 100, 80, (255, 255, 255), f"Rename {i + 1}", rename, GameManager.racers.sprites()[i])
+            # Set button action to rename racer
+            Gui.buttons.append(rename_button)
         
-        textinput.update(CoreGame.events)
+        #inscrease/decrease bet amount buttons
+        increase_bet_amount_button = graphics_elements.Button(600, 600, 50, 50, (255, 255, 255), "+50", GameManager.increase_bet, 50)
+        Gui.buttons.append(increase_bet_amount_button)
+        decrease_bet_amount_button = graphics_elements.Button(600, 650, 50, 50, (255, 255, 255), "-50", GameManager.increase_bet, -50)
+        Gui.buttons.append(decrease_bet_amount_button)
 
         #What others have bet
         if not BotManager.bots:
@@ -132,30 +177,25 @@ class GameManager:
 
         for i in range(5):
             racer = GameManager.racers.sprites()[i]
-            font = pygame.font.SysFont(None, 24)
-            racer_total_bet_text = font.render(
-                _("Other gamblers have bet \n ${} on this racer.").format(racer.get_total_money_bet()),
-                True,
-                pygame.Color("black")
-            )
-            racer_total_bet_text_pos = (50 + i * 250, 400)
+            font = pygame.font.SysFont("Constantia", 15)
             utils.renderTextCenteredAt(
                 _("Other gamblers have bet \n ${} on this racer.").format(racer.get_total_money_bet()),
                 font,
                 pygame.Color("black"),
                 100 + i * 250,
-                400,
+                200,
                 CoreGame.screen,
                 100
             )
 
+        #start button
+        start_button = graphics_elements.Button(900, 650, 200, 50, (255, 0, 0), _("Start"), GameManager.start_game)
+        Gui.buttons.append(start_button)
+
         #display all elements
-        screen.blit(textinput.surface, (100 + bet_amount_text.get_width(), 600))
         screen.blit(bet_amount_text, bet_amount_text_pos)
         screen.blit(bet_on_who_text, bet_on_who_text_pos)
         screen.blit(player_money_text, (0, 0))
-
-        UserInput.handle_betting_input(textinput)
 
     def racing_screen(dt, current_time, screen):
         '''Displays and handles the racing screen'''
@@ -229,8 +269,9 @@ class GameManager:
     @staticmethod
     def start_game():
         '''Starts racing'''
-        GameManager.state = "racing"
-        SpellManager.generate_spells(random.randint(3, 5))
+        if (not GameManager.player.bet_on_who == None and GameManager.player.place_bet(GameManager.player.bet_on_who, GameManager.player_bet_amount)):
+            GameManager.state = "racing"
+            SpellManager.generate_spells(random.randint(3, 5))
     
     @staticmethod
     def generate_racers(charset):
@@ -238,6 +279,10 @@ class GameManager:
         for i in range(5):
             racer = Racer(CoreGame.background.start_point, CoreGame.background.first_lane_y_pos + i * 84, charset, i)
             racer.add(GameManager.racers)        
+
+    @staticmethod
+    def increase_bet(amount):
+        GameManager.player_bet_amount += amount
 
     def countdown():
         '''Countdown from 3 to 1'''
@@ -277,8 +322,7 @@ class GameManager:
         BotManager.reset()
 
         Bookmaker.reset()
-        
-        UserInput.clicked_racer = None
+
 
 class Spell(pygame.sprite.Sprite):
     hidden_spell_sprite = pygame.image.load("./Assets/Spells/hidden_spell.png")
@@ -473,6 +517,8 @@ class Racer(pygame.sprite.Sprite):
         
         pygame.sprite.Sprite.__init__(self)   
 
+        self.name = "Racer " + str(lane + 1) 
+
         self.walking_sprites = charset[lane]
         self.idle_sprites = charset[lane + 5]
         self.celebrate_sprites = charset[lane + 10]
@@ -643,6 +689,7 @@ class Gambler:
         self.bet_on_who = None
 
     def place_bet(self, racer, amount):
+        '''Place a bet on a racer, return true if the bet is successful, else return false'''
         if amount < 100:
             return False
         
@@ -662,23 +709,23 @@ class Gambler:
     def reset(self):
         self.bet_on_who = None
         
-class UserInput:
-    bet_racer_index = None
+# class UserInput:
+#     bet_racer_index = None
 
-    @staticmethod
-    def handle_betting_input(textinput):
-        for event in CoreGame.events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                if UserInput.bet_racer_index != None:
-                    if GameManager.player.place_bet(GameManager.racers.sprites()[UserInput.bet_racer_index], int(textinput.value)):
-                        GameManager.start_game()
+#     @staticmethod
+#     def handle_betting_input(textinput):
+#         for event in CoreGame.events:
+#             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+#                 if UserInput.bet_racer_index != None:
+#                     if GameManager.player.place_bet(GameManager.racers.sprites()[UserInput.bet_racer_index], int(textinput.value)):
+#                         GameManager.start_game()
                     
-            #left click    
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:            
-                mouse_pos = event.pos          
-                for button in Gui.buttons:          
-                    if button.rect.collidepoint(mouse_pos):                    
-                        UserInput.bet_racer_index = int(button.text[-1]) - 1
+#             #left click    
+#             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:            
+#                 mouse_pos = event.pos          
+#                 for button in Gui.buttons:          
+#                     if button.rect.collidepoint(mouse_pos):                    
+#                         UserInput.bet_racer_index = int(button.text[-1]) - 1
 
 class I18N:
     @staticmethod

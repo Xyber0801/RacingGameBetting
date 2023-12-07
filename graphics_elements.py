@@ -4,7 +4,7 @@ import pygame
 class Button(pygame.sprite.Sprite):
     button_sprites = [pygame.image.load(f"./Assets/UI/Button/UI_Flat_Button_Large_Lock_01a{i}.png") for i in range(1, 5)]
 
-    def __init__(self, x, y, width, height, color, text, action=None):
+    def __init__(self, x, y, width, height, color, text, action=None, arg=None):
         pygame.sprite.Sprite.__init__(self)
 
         self.width = width
@@ -24,12 +24,13 @@ class Button(pygame.sprite.Sprite):
         self.image.blit(self.text_surface, self.text_rect)
 
         self.action = action
+        self.arg = arg
         self.action_return_value = None
 
     #when button is clicked, call the action function
     def click(self):
         if self.action is not None:
-            self.action_return_value = self.action()
+            self.action_return_value = self.action(self.arg) if self.arg is not None else self.action()
 
 class Background():
     def __init__(self, width, height, image, first_lane_y_pos, start_point, end_point):
