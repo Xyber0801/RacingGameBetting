@@ -6,7 +6,6 @@ import graphics_elements
 import utils
 import constants as c
 import gettext
-
 _ = gettext.gettext
 
 class CoreGame:
@@ -73,7 +72,7 @@ class GameManager:
     def init():
         '''Initialize the game'''        
         GameManager.generate_racers(CoreGame.charset)
-        GameManager.player = Gambler(300, 'Player')
+        GameManager.player = Gambler(c.money, 'Player')
         GameManager.state = 'betting'
 
     @staticmethod
