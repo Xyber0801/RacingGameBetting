@@ -7,6 +7,11 @@ import graphics_elements as ge
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
+# Race setup variable
+background_setup = []
+character_setup = []
+money = 300
+
 # Backgrounds
 pygame.image.load("./assets/bg/grassland.png")
 grassland_long = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
@@ -64,12 +69,12 @@ archer_sprites = [pygame.image.load(f"./assets/char/chibi/Archer/Run_{i}.png") f
 enchantress_sprites = [pygame.image.load(f"./assets/char/chibi/Enchantress/Run_{i}.png") for i in range(1,9)]
 knight_sprites = [pygame.image.load(f"./assets/char/chibi/Knight/Run_{i}.png") for i in range(1,8)]
 swordsman_sprites = [pygame.image.load(f"./assets/char/chibi/Swordsman/Run_{i}.png") for i in range(1,9)]
-wizard_sprites = [pygame.image.load(f"./assets/char/chibi/Knight/Run_{i}.png") for i in range(1,8)]
+wizard_sprites = [pygame.image.load(f"./assets/char/chibi/Wizard/Run_{i}.png") for i in range(1,8)]
 archer_idle_sprites = [pygame.image.load(f"./assets/char/chibi/Archer/Idle_{i}.png") for i in range(1,5)]
 enchantress_idle_sprites = [pygame.image.load(f"./assets/char/chibi/Enchantress/Idle_{i}.png") for i in range(1,6)]
 knight_idle_sprites = [pygame.image.load(f"./assets/char/chibi/Knight/Idle_{i}.png") for i in range(1,7)]
 swordsman_idle_sprites = [pygame.image.load(f"./assets/char/chibi/Swordsman/Idle_{i}.png") for i in range(1,4)]
-wizard_idle_sprites = [pygame.image.load(f"./assets/char/chibi/Knight/Idle_{i}.png") for i in range(1,6)]
+wizard_idle_sprites = [pygame.image.load(f"./assets/char/chibi/Wizard/Idle_{i}.png") for i in range(1,6)]
 archer_celebrate_sprites = [pygame.image.load(f"./assets/char/chibi/Archer/Celebrate_{i}.png") for i in range(1,10)]
 enchantress_celebrate_sprites = [pygame.image.load(f"./assets/char/chibi/Enchantress/Celebrate_{i}.png") for i in range(1,9)]
 knight_celebrate_sprites = [pygame.image.load(f"./assets/char/chibi/Knight/Celebrate_{i}.png") for i in range(1,7)]
