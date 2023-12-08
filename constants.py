@@ -8,12 +8,13 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
 # Race setup variable
-background_setup = []
-character_setup = []
+background_setup = None
+character_setup = None
 money = 300
 
 # Backgrounds
-pygame.image.load("./assets/bg/grassland.png")
+menu_background = pygame.transform.scale(pygame.image.load("./assets/Menu_Background/Menu0.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
+#race backgrounds are stored in a list, each background contains the image, the first lane y position, the start point and the end point
 grassland_long = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
 grassland_medium = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_medium.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 150, 1100)
 grassland_short = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_short.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 250, 1000)
