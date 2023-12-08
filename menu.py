@@ -326,6 +326,7 @@ def dis_choosing():
         draw_rect(240,498.25,800,191.75,113,(0,0,0),30,lg_list[56].replace('\n',distance))
         if yes.draw_button():
             initial_setup()
+            pygame.mixer_music.stop()
             menu_running=False
             distance_active=False
             distance_choosing=False
@@ -334,26 +335,26 @@ def dis_choosing():
             distance=''
 def initial_setup():
     global ev, distance, chr_set_index
-    if ev=='Forest':
-        if distance=='Short':
+    if ev==lg_list[16]:
+        if distance==lg_list[48]:
             c.background_setup=c.forest_short
-        if distance=='Medium':
+        if distance==lg_list[50]:
             c.background_setup=c.forest_medium
-        if distance=='Long':
+        if distance==lg_list[52]:
             c.background_setup=c.forest_long
-    elif ev=='Grassland':
-        if distance=='Short':
+    elif ev==lg_list[18]:
+        if distance==lg_list[48]:
             c.background_setup=c.grassland_short
-        if distance=='Medium':
+        if distance==lg_list[50]:
             c.background_setup=c.grassland_medium
-        if distance=='Long':
+        if distance==lg_list[52]:
             c.background_setup=c.grassland_long
     else:
-        if distance=='Short':
+        if distance==lg_list[48]:
             c.background_setup=c.sunset_short
-        if distance=='Medium':
+        if distance==lg_list[50]:
             c.background_setup=c.sunset_medium
-        if distance=='Long':
+        if distance==lg_list[52]:
             c.background_setup=c.sunset_long
     if chr_set_index==1:
         c.character_setup=c.animal_set
@@ -371,12 +372,20 @@ def history_display():
     back=button(30,30,180,40,1,2.5,lg_list[14])
     previous=button(30,320,180,40,1,2.5,lg_list[58])
     next=button(1070,320,180,40,1,2.5,lg_list[42])
-    winrate_text = font.render(history_text[0], True, (255,255,255))
+    winrate=0
+    for i in range(0,len(history_list),1):
+        if i%6==2:
+            if history_list[i]==1:
+                winrate+=1
+    winrate=round(100*winrate/(len(history_list)//6),2)
+    winrate_text = font.render(history_text[0].replace('\n',str(winrate)), True, (255,255,255))
     winrate_text_rect = winrate_text.get_rect(midtop=(640,50))
-    game_played_text = font.render(history_text[1], True, (255,255,255))
+    game_played_text = font.render(history_text[1].replace('\n',str(len(history_list)//6)), True, (255,255,255))
     game_played_text_rect = game_played_text.get_rect(midtop=(640,125))
-    
-    screen.fill(255) 
+    history_bg=pygame.image.load(image_list[116])
+    screen.blit(history_bg,(0,0))
+    draw_rect(240,25,800,160,129,(0,0,0),5,'')
+    draw_rect(240,225,800,460,129,(0,0,0),5,'')
     screen.blit(winrate_text, winrate_text_rect)
     screen.blit(game_played_text, game_played_text_rect)  
     if back.draw_button():
@@ -560,10 +569,10 @@ def minigame_display():
     global menu_active, minigame_active, font
     if minigame_active:
         back=button(30,30,180,40,1,2.5,lg_list[14])       
-        minigame1=button(30,140,595,260,117,5,'')
-        minigame2=button(655,140,595,260,120,5,'')
-        minigame3=button(30,430,595,260,123,5,'')
-        minigame4=button(655,430,595,260,126,5,'')
+        minigame1=button(30,140,595,260,118,5,'')
+        minigame2=button(655,140,595,260,121,5,'')
+        minigame3=button(30,430,595,260,124,5,'')
+        minigame4=button(655,430,595,260,127,5,'')
         draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[76]) 
         if back.draw_button():
             menu_active=True
@@ -583,6 +592,8 @@ def minigame_display():
 def menu():
     global menu_running
     menu_running=True
+    pygame.mixer_music.load(r".\assets\music\menu_music.mp3")
+    pygame.mixer_music.play(-1)
     while menu_running:
         clock.tick(60)       
         for event in pygame.event.get():

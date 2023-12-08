@@ -115,7 +115,7 @@ info=[r'.\Assets\Character_Info\animal\Bird\PyBird_Info0.png', r'.\Assets\Charac
       'It is the buff 03, which can help your character with its Third effect!', 'Đây là buff 3, thứ giúp bạn với hiệu ứng thứ ba của nó',
       'It is the buff 04, which can help your character with its Fourth effect!', 'Đây là buff 4, thứ giúp bạn với hiệu ứng thứ tư của nó',
       ]
-history_text = ['Winrate: \n', 'Number of games played: \n', 'Time played: \n', 'Bet Character: \n', 'Rank: \n', 'Money Bet: $\n', 'Winning Bet Money: $\n', 'Lost Bet Money: $\n']
+history_text = ['Winrate: \n%', 'Number of games played: \n', 'Time played: \n', 'Bet Character: \n', 'Rank: \n', 'Money Bet: $\n', 'Winning Bet Money: $\n', 'Lost Bet Money: $\n']
 history_list=['13:20:52', 'PyArcher', 1, 200, 600, 0, '00:20:52', 'PyBear', 2, 300, 0, 300, '07:07:07', 'PyChibi Acher', 5, 100, 0, 100, '22:52:52', 'PyOgre', 1, 300, 723, 0,]
 rs_list=['1280x720','FULLSCREEN']
 image_list=[r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a1.png", r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a2.png", r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a3.png", #1
@@ -156,9 +156,9 @@ image_list=[r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a1.png", r".\Assets
             r".\Assets\char\car\PyCarDanh0.png", r".\Assets\char\car\PyCarDanh1.png", r".\Assets\char\car\PyCarDanh2.png", #106
             r".\Assets\char\car\PyCarDuy0.png", r".\Assets\char\car\PyCarDuy1.png", r".\Assets\char\car\PyCarDuy2.png", #109
             r".\Assets\Menu_Background\title_frame0.png", r".\Assets\Menu_Background\title_frame1.png", r".\Assets\Menu_Background\query_frame.png", #112
-            r".\Assets\Menu_Background\volume_frame.png", r".\Assets\Menu_Background\volume.png", #115
-            r".\Assets\minigame_image\minigame1_0.png", r".\Assets\minigame_image\minigame1_1.png", r".\Assets\minigame_image\minigame1_2.png", #117
-            r".\Assets\minigame_image\minigame2_0.png", r".\Assets\minigame_image\minigame2_1.png", r".\Assets\minigame_image\minigame2_2.png", #120
-            r".\Assets\minigame_image\minigame3_0.png", r".\Assets\minigame_image\minigame3_1.png", r".\Assets\minigame_image\minigame3_2.png", #123
-            r".\Assets\minigame_image\minigame4_0.png", r".\Assets\minigame_image\minigame4_1.png", r".\Assets\minigame_image\minigame4_2.png", #126
-            ]
+            r".\Assets\Menu_Background\volume_frame.png", r".\Assets\Menu_Background\volume.png", r".\assets\Menu_Background\history_background.jpg", #115
+            r".\Assets\minigame_image\minigame1_0.png", r".\Assets\minigame_image\minigame1_1.png", r".\Assets\minigame_image\minigame1_2.png", #118
+            r".\Assets\minigame_image\minigame2_0.png", r".\Assets\minigame_image\minigame2_1.png", r".\Assets\minigame_image\minigame2_2.png", #121
+            r".\Assets\minigame_image\minigame3_0.png", r".\Assets\minigame_image\minigame3_1.png", r".\Assets\minigame_image\minigame3_2.png", #124
+            r".\Assets\minigame_image\minigame4_0.png", r".\Assets\minigame_image\minigame4_1.png", r".\Assets\minigame_image\minigame4_2.png", #127
+            r".\assets\Menu_Background\history_list1.jpg",]
