@@ -12,18 +12,21 @@ background_setup = None
 character_setup = None
 money = 300
 
+#back button shananigans
+go_to_distance_selection = False
+
 # Backgrounds
 menu_background = pygame.transform.scale(pygame.image.load("./assets/Menu_Background/Menu0.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
 #race backgrounds are stored in a list, each background contains the image, the first lane y position, the start point and the end point
-grassland_long = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
-grassland_medium = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_medium.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 150, 1100)
-grassland_short = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_short.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 250, 1000)
-forest_long = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/forest_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
-forest_medium = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/forest_medium.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 150, 1100)
-forest_short = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/forest_short.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 210, 250, 1000)
-sunset_long = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/sunset_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
-sunset_medium = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/sunset_medium.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 150, 1100)
-sunset_short = ge.Background(SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/sunset_short.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 250, 1000)
+grassland_long = ge.Background('grassland_long', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
+grassland_medium = ge.Background('grassland_medium', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_medium.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 150, 1100)
+grassland_short = ge.Background('grassland_short', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_short.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 250, 1000)
+forest_long = ge.Background('forest_long', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/forest_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
+forest_medium = ge.Background('forest_medium', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/forest_medium.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 150, 1100)
+forest_short = ge.Background('forest_short', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/forest_short.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 210, 250, 1000)
+sunset_long = ge.Background('sunset_long', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/sunset_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
+sunset_medium = ge.Background('sunset_medium', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/sunset_medium.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 150, 1100)
+sunset_short = ge.Background('sunset_short', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/sunset_short.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 250, 1000)
 
 # character sets
 #set 1 - medieval

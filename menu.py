@@ -2,7 +2,6 @@
 import pygame, sys
 from pygame.locals import *
 import constants as c
-from coregame import GameManager
 from DinoGame import Dino_game
 from minigame import Minigame
 from car_game import Car_Game
@@ -588,10 +587,25 @@ def minigame_display():
         if minigame4.draw_button():   
             c.money+=int(Snake_game.start())
             pygame.display.set_mode((1280,720))  
+
+def go_to_distance_selection():
+    c.go_to_distance_selection=False
+    
+    global menu_active, play_button_active, ev_choosing, ev, chr_set_active, chr_set_choosing, chr_set, chr_set_index, distance_active
+    ev_choosing=False
+    menu_active=False
+    chr_set_active=False
+    chr_set_choosing=False
+    play_button_active=False
+    distance_active=True
+    
 #Chạy menu
 def menu():
-    global menu_running
+    global menu_running, menu_active
     menu_running=True
+    menu_active = True
+    if c.go_to_distance_selection:
+        go_to_distance_selection()
     pygame.mixer_music.load(r".\assets\music\menu_music.mp3")
     pygame.mixer_music.play(-1)
     while menu_running:

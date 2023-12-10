@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-12-05 11:39+0700\n"
-"PO-Revision-Date: 2023-12-05 11:46+0700\n"
+"POT-Creation-Date: 2023-12-10 14:07+0700\n"
+"PO-Revision-Date: 2023-12-10 14:08+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -10,37 +10,51 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.1\n"
-"X-Poedit-Basepath: ..\n"
+"X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPath-1: coregame.py\n"
-"X-Poedit-SearchPath-2: minigame.py\n"
 
-#: coregame.py:93
-msgid "Bet Amount:"
-msgstr "Số tiền đặt cược:"
+#: coregame.py:135
+msgid "Rename to:"
+msgstr "Đổi tên thành:"
 
-#: coregame.py:98
+#: coregame.py:146
+msgid "Bet Amount: ${}"
+msgstr "Số tiền đặt cược: ${}"
+
+#: coregame.py:150
 msgid "Bet on racer: {}"
 msgstr "Đặt cược trên tay đua: {}"
 
-#: coregame.py:98
+#: coregame.py:150
 msgid "Not selected yet"
 msgstr "Chưa được chọn"
 
-#: coregame.py:104 coregame.py:172 coregame.py:195 coregame.py:216
+#: coregame.py:157 coregame.py:232 coregame.py:255 coregame.py:276
 msgid "Player's Money: ${}"
-msgstr "Số tiền của người chơi:"
+msgstr "Số tiền của người chơi: ${}"
 
-#: coregame.py:134 coregame.py:140
+#: coregame.py:189
+msgid "Bet on {}"
+msgstr "Đặt cược vào {}"
+
+#: coregame.py:193
+msgid "Rename {}"
+msgstr "Đổi tên {}"
+
+#: coregame.py:210
 msgid ""
 "Other gamblers have bet \n"
 " ${} on this racer."
 msgstr "Những người chơi khác đã đặt cược ${} trên tay đua này."
 
-#: coregame.py:219
+#: coregame.py:214
+msgid "Start"
+msgstr "Bắt đầu"
+
+#: coregame.py:279
 msgid "You don't have enough money to bet, play a minigame to get more money"
 msgstr "Bạn không còn đủ tiền để đặt cược, hãy chơi minigame để nhận thêm tiền"
 
-#: coregame.py:223
+#: coregame.py:283
 msgid "Minigame"
 msgstr "Minigame"

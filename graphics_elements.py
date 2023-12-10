@@ -33,9 +33,10 @@ class Button(pygame.sprite.Sprite):
     def update_image(self):
         #if mouse is hovered over button, change image
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.image = self.hover_image
-        elif pygame.mouse.get_pressed()[0] and self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.image = self.click_image
+            if (pygame.mouse.get_pressed()[0]):
+                self.image = self.click_image
+            else:
+                self.image = self.hover_image
         else:
             self.image = self.normal_image
 
@@ -60,7 +61,7 @@ class InfoBox(pygame.sprite.Sprite):
         self.height = height
         self.image = pygame.transform.scale(pygame.image.load('./assets/Menu_Background/query_frame.png'), (self.width, self.height))
         self.rect = self.image.get_rect()
-        self.padding = 10
+        self.padding = 15
 
         self.font = pygame.font.SysFont("Constantia", 20)
         self.text = text
@@ -71,7 +72,8 @@ class InfoBox(pygame.sprite.Sprite):
         utils.renderTextCenteredAt(self.text, self.font, pygame.Color("white"), self.center_x[0], self.center_x[1], screen, self.width-self.padding*2)
 
 class Background():
-    def __init__(self, width, height, image, first_lane_y_pos, start_point, end_point):
+    def __init__(self, name, width, height, image, first_lane_y_pos, start_point, end_point):
+        self.name = name
         self.width = width
         self.height = height
         self.first_lane_y_pos = first_lane_y_pos
