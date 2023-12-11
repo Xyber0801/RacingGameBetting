@@ -26,11 +26,5 @@ def __main__():
         menu()
         CoreGame.start(screen, clock)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-                quit()
-
 if __name__ == '__main__':
     __main__()

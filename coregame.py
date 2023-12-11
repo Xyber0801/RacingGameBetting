@@ -6,6 +6,7 @@ from minigame import Minigame
 import graphics_elements
 import constants as c
 import game_text_sources as gts
+import leaderboard
 import pygame_textinput
 from i18n import I18N
 global _
@@ -44,7 +45,6 @@ class CoreGame:
     def gameloop():
         dt = 0
         CoreGame.running = True
-        print(len(GameManager.racers.sprites()))
         while CoreGame.running:
             current_time = pygame.time.get_ticks() / 1000
             CoreGame.events = pygame.event.get()
@@ -277,10 +277,11 @@ class GameManager:
         Bookmaker.give_money(GameManager.finished_racers.sprites()[0])
 
         GameManager.racers.draw(screen)
-
-        restart_button = graphics_elements.Button(300, 650, 400, 50, (255, 0, 0), "Restart", GameManager.reset)
-        Gui.buttons.append(restart_button)  
-    
+        #wait 1 sec
+        pygame.time.wait(1500)
+        leaderboard.main_BXH(GameManager.finished_racers)
+        GameManager.reset()
+        
     def minigame(screen):
         '''Displays and handles the minigame screen'''
         Gui.reset_elements()
@@ -366,8 +367,6 @@ class GameManager:
         BotManager.reset()
 
         Bookmaker.reset()
-
-        
 
         GameManager.go_to_menu()
 

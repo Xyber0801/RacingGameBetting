@@ -603,6 +603,7 @@ def go_to_distance_selection():
 #Chạy menu
 def menu():
     global menu_running, menu_active
+    print("menu running")
     menu_running=True
     menu_active = True
     if c.go_to_distance_selection:
