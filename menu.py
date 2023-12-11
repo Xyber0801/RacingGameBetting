@@ -372,11 +372,12 @@ def history_display():
     previous=button(30,320,180,40,1,2.5,lg_list[58])
     next=button(1070,320,180,40,1,2.5,lg_list[42])
     winrate=0
-    for i in range(0,len(history_list),1):
-        if i%6==2:
-            if history_list[i]==1:
-                winrate+=1
-    winrate=round(100*winrate/(len(history_list)//6),2)
+    if history_list:
+        for i in range(0,len(history_list),1):
+            if i%6==2:
+                if history_list[i]==1:
+                    winrate+=1
+        winrate=round(100*winrate/(len(history_list)//6),2)
     winrate_text = font.render(history_text[0].replace('\n',str(winrate)), True, (255,255,255))
     winrate_text_rect = winrate_text.get_rect(midtop=(640,50))
     game_played_text = font.render(history_text[1].replace('\n',str(len(history_list)//6)), True, (255,255,255))

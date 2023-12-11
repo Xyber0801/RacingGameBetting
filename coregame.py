@@ -1,14 +1,14 @@
 import pygame
+import datetime
 import random
 import math
 from minigame import Minigame
 import graphics_elements
 import constants as c
-import gettext
 import game_text_sources as gts
 import pygame_textinput
-import menu
-_ = gettext.gettext
+from i18n import I18N
+global _
 
 class CoreGame:
     running = False
@@ -77,6 +77,8 @@ class GameManager:
 
     player = None
     player_bet_amount = 0
+    player_money_original = 0
+
     renaming = False
     renaming_who = None
     
@@ -222,6 +224,8 @@ class GameManager:
                 bet_amount_for_racer_infobox = graphics_elements.InfoBox(50 + i * 250, 200, 200, 150, _("Other gamblers have bet \n ${} on this racer.").format(racer.get_total_money_bet()))
                 Gui.infoboxes.append(bet_amount_for_racer_infobox)
 
+        GameManager.player_money_original = GameManager.player.money
+
         #start button
         start_button = graphics_elements.Button(900, 650, 200, 50, (255, 0, 0), _("Start"), GameManager.start_game)
         Gui.buttons.append(start_button)
@@ -346,14 +350,23 @@ class GameManager:
     def reset():
         '''Reset the game'''
         print("reseting game")
+
+        #update history list
+        delta_money = GameManager.player.money - GameManager.player_money_original
+        new_data =  [str(datetime.datetime.now().time()), GameManager.player.bet_on_who.name, GameManager.finished_racers.sprites().index(GameManager.player.bet_on_who) + 1, GameManager.player_bet_amount, 0 if delta_money < 0 else delta_money, 0 if delta_money > 0 else -delta_money]
+        for data in new_data:   
+            gts.history_list.append(data)
+
         GameManager.racers.empty()
         GameManager.racers_showcase.empty()
         GameManager.finished_racers.empty()
-        #GameManager.player.reset()
+        GameManager.player_bet_amount = 0
 
         BotManager.reset()
 
         Bookmaker.reset()
+
+        
 
         GameManager.go_to_menu()
 
@@ -754,12 +767,3 @@ class Gambler:
     def reset(self):
         self.bet_on_who = None
 
-class I18N:
-    @staticmethod
-    def change_locale(locale):
-        global _
-        locale_path = "./locales"
-        translation = gettext.translation('base', locale_path, languages=[locale])
-        translation.install()
-
-        _ = translation.gettext
