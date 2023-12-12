@@ -484,7 +484,7 @@ def setting_language():
                     rs_list[i]=rs_list[i+1]
                     rs_list[i+1]=a
             if rs_count==0:
-                pygame.display.set_mode((1280,720),FULLSCREEN)
+                pygame.display.set_mode((1280,720), FULLSCREEN)
                 rs_count=1
             else:
                 pygame.display.set_mode((1280,720))

@@ -116,7 +116,6 @@ info=[r'.\Assets\Character_Info\animal\Bird\PyBird_Info0.png', r'.\Assets\Charac
       'It is the buff 04, which can help your character with its Fourth effect!', 'Đây là buff 4, thứ giúp bạn với hiệu ứng thứ tư của nó',
       ]
 history_text = ['Winrate: \n%', 'Number of games played: \n', 'Time played: \n', 'Bet Character: \n', 'Rank: \n', 'Money Bet: $\n', 'Winning Bet Money: $\n', 'Lost Bet Money: $\n']
-#history_list=['13:20:52', 'PyArcher', 1, 200, 600, 0, '00:20:52', 'PyBear', 2, 300, 0, 300, '07:07:07', 'PyChibi Acher', 5, 100, 0, 100, '22:52:52', 'PyOgre', 1, 300, 723, 0,]
 history_list = []
 rs_list=['1280x720','FULLSCREEN']
 image_list=[r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a1.png", r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a2.png", r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a3.png", #1

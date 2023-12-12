@@ -1,10 +1,10 @@
 #thư viện
 import pygame #game
-import sys
+#import sys
 from button import ButtonA
 pygame.init()
 
-import pyautogui  #screenshot
+#import pyautogui  #screenshot
 
 from ctypes import POINTER, WINFUNCTYPE, windll
 from ctypes.wintypes import BOOL, HWND, RECT
@@ -24,8 +24,8 @@ import constants as c
 
 SCREEN = pygame.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
 
-BG = pygame.transform.scale(pygame.image.load('./BXH/bg2.png'), (c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
-Ldb = pygame.image.load('./BXH/leaderboard00.png')
+BG = pygame.transform.scale(pygame.image.load('./assets/BXH/bg2.png'), (c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
+Ldb = pygame.image.load('./assets/BXH/leaderboard00.png')
 Ldb = pygame.transform.scale(Ldb,(361,494))
 
     
@@ -74,7 +74,7 @@ def filetxt(): #chuyển file screen
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+                quit()
             if event.type == pygame.MOUSEBUTTONUP:
                 if FILE_BACK.checkForInput(FILE_MOUSE_POS):
                     main_BXH()
@@ -83,7 +83,7 @@ def filetxt(): #chuyển file screen
                     img = cv2.imread(img_path)
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                     text = pytesseract.image_to_string(img, lang="eng")
-                    with open("./BXH/filetxt.txt", "w", encoding="utf-8") as f:
+                    with open("./assets/BXH/filetxt.txt", "w", encoding="utf-8") as f:
                         f.writelines(text)
 
 
@@ -92,7 +92,7 @@ def filetxt(): #chuyển file screen
                     root.title("file txt")
                     root.geometry("600x600")
                     def img_to_txt():       #hiển thị txt
-                        text_file = open("./BXH/filetxt.txt")
+                        text_file = open("./assets/BXH/filetxt.txt")
                         print(text_file)
                         data = text_file.read()
                         my_text.insert(END,data)
@@ -179,17 +179,17 @@ def main_BXH(finished_racers): #main BXH screen
         rect = GetWindowRect(hwnd)            # finally get our data!
         
         #button
-        ST = pygame.image.load("./BXH/button00.png")
+        ST = pygame.image.load("./assets/BXH/button00.png")
         ST = pygame.transform.scale(ST, (150, 170))
         Start_button = ButtonA(image=ST, pos = (665, 600), 
                        text_input="Start", font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
         
-        Scr = pygame.image.load("./BXH/button00.png")
+        Scr = pygame.image.load("./assets/BXH/button00.png")
         Scr = pygame.transform.scale(Scr, (150, 170))
         Screenshot_button = ButtonA(image=Scr, pos = (500,620), 
                        text_input="Screenshot", font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
         
-        file = pygame.image.load("./BXH/button00.png")
+        file = pygame.image.load("./assets/BXH/button00.png")
         file = pygame.transform.scale(file, (150, 170))
         filetxt_button = ButtonA(image=file, pos = (800,620), 
                        text_input="File text", font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
@@ -209,15 +209,16 @@ def main_BXH(finished_racers): #main BXH screen
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+                quit()
             if event.type == pygame.MOUSEBUTTONUP:
                 if Start_button.checkForInput(BXH_MOUSE_POS):   
                     running = False
 
                 if Screenshot_button.checkForInput(BXH_MOUSE_POS):
                     #lấy tọa độ và chụp màn hình
-                    picture = pyautogui.screenshot(region=(rect.left + 10,rect.top + 35,1000,672))
-                    picture.save('./BXH/screenshot.png')
+                    #picture = pyautogui.screenshot(region=(rect.left + 10,rect.top + 35,1000,672))
+                    #picture.save('./assets/BXH/screenshot.png')
+                    pygame.image.save(SCREEN, './assets/BXH/screenshot.png')
                     
                         #HIỂN THỊ ẢNH VỪA CHỤP
                     #pc = cv2.imread('C:\\Users\\ASUS\\OneDrive\\Desktop\\DL BXH\\BXH\\screenshot.png')
@@ -227,7 +228,7 @@ def main_BXH(finished_racers): #main BXH screen
 
                     #LƯU ẢNH VỪA CHỤP (BẮT BUỘC)
                     # Load image
-                    pct = pygame.image.load("./BXH/screenshot.png")
+                    pct = pygame.image.load("./assets/BXH/screenshot.png")
                     # Show save dialog
                     root =Tk()
                     root.withdraw()
