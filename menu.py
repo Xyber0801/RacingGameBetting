@@ -153,13 +153,13 @@ def menu_display():
     #Hàm chọn môi trường
 def environment_display():
     global menu_active, play_button_active, ev_choosing, ev
-    ev1=button(29,140,388,218.25,4,5,'')
-    ev2=button(446,140,388,218.25,7,5,'')
-    ev3=button(863,140,388,218.25,10,5,'')
+    ev1=button(29,388.25,388,80,1,22.5,lg_list[16])
+    ev2=button(446,388.25,388,80,1,22.5,lg_list[18])
+    ev3=button(863,388.25,388,80,1,22.5,lg_list[20])
     back=button(30,30,180,40,1,2.5,lg_list[14])
-    draw_rect(29,388.25,388,80,112,(0,0,0),22.5,lg_list[16])
-    draw_rect(446,388.25,388,80,112,(0,0,0),22.5,lg_list[18])
-    draw_rect(863,388.25,388,80,112,(0,0,0),22.5,lg_list[20])
+    draw_rect(29,140,388,218.25,3,(0,0,0),22.5,'')
+    draw_rect(446,140,388,218.25,6,(0,0,0),22.5,'')
+    draw_rect(863,140,388,218.25,9,(0,0,0),22.5,'')
     draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[22])   
     if back.draw_button():
         ev=''
@@ -295,13 +295,13 @@ def chr_information():
     #Hàm chọn độ dài đường đua
 def distance_display():
     global distance_active, chr_set_active, distance_choosing, distance
-    dis1=button(29,140,388,218.25,13,5,'')
-    dis2=button(446,140,388,218.25,16,5,'')
-    dis3=button(863,140,388,218.25,19,5,'')
+    dis1=button(29,388.25,388,80,1,22.5,lg_list[48])
+    dis2=button(446,388.25,388,80,1,22.5,lg_list[50])
+    dis3=button(863,388.25,388,80,1,22.5,lg_list[52])
     back=button(30,30,180,40,1,2.5,lg_list[14])
-    draw_rect(29,388.25,388,80,112,(0,0,0),22.5,lg_list[48])
-    draw_rect(446,388.25,388,80,112,(0,0,0),22.5,lg_list[50])
-    draw_rect(863,388.25,388,80,112,(0,0,0),22.5,lg_list[52])
+    draw_rect(29,140,388,218.25,12,(0,0,0),22.5,'')
+    draw_rect(446,140,388,218.25,15,(0,0,0),22.5,'')
+    draw_rect(863,140,388,218.25,18,(0,0,0),22.5,'')
     draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[54])   
     if back.draw_button():
         chr_set_active=True
@@ -378,9 +378,9 @@ def history_display():
                 if history_list[i]==1:
                     winrate+=1
         winrate=round(100*winrate/(len(history_list)//6),2)
-    winrate_text = font.render(history_text[0].replace('\n',str(winrate)), True, (255,255,255))
+    winrate_text = font.render(lg_list[88].replace('\n',str(winrate)), True, (255,255,255))
     winrate_text_rect = winrate_text.get_rect(midtop=(640,50))
-    game_played_text = font.render(history_text[1].replace('\n',str(len(history_list)//6)), True, (255,255,255))
+    game_played_text = font.render(lg_list[90].replace('\n',str(len(history_list)//6)), True, (255,255,255))
     game_played_text_rect = game_played_text.get_rect(midtop=(640,125))
     history_bg=pygame.image.load(image_list[116])
     screen.blit(history_bg,(0,0))
@@ -407,12 +407,12 @@ def history_display():
             u=len(history_list) - 6
     if len(history_list)!=0:
         for i in range(u,v,1):
-            txt_surface = font.render(history_text[2+i%6].replace('\n',str(history_list[i])), True, (255,255,255))
+            txt_surface = font.render(lg_list[92+2*(i%6)].replace('\n',str(history_list[i])), True, (255,255,255))
             txt_surface_rect=txt_surface.get_rect(midtop=(640, 250 + (i%6)*(75)))
             screen.blit(txt_surface, txt_surface_rect)
     #Hàm cài đặt trong trò chơi
 def setting_display():
-    global menu_active, setting_button_active, dvl, switch_language, lg_count, lg_list, switch_resolution
+    global menu_active, setting_button_active, dvl, switch_language, lg_count, lg_list, switch_resolution, rs_count
     back=button(30,30,180,40,1,2.5,lg_list[14])
     volume_down=button(532,305,40,40,1,1.5,'-')
     volume_up=button(962,305,40,40,1,1.5,'+')
@@ -434,6 +434,7 @@ def setting_display():
         menu_active=True
         setting_button_active=False
         switch_language=False
+        switch_resolution=False
     if volume_up.draw_button():
         dvl+=0.1
         if dvl>1.0:
@@ -453,10 +454,10 @@ def setting_display():
             lg_count=0
             switch_language=False
     if resolution_choice.draw_button() or more_rs.draw_button(): 
-        lg_count+=1
+        rs_count+=1
         switch_resolution=True
-        if lg_count>1:
-            lg_count=0
+        if rs_count>1:
+            rs_count=0
             switch_resolution=False
 def switch_lg(list):
     for i in range(0,len(list),1):
@@ -477,18 +478,12 @@ def setting_language():
     if switch_resolution:
         new_choice=button(532,500,250,40,1,5,rs_list[1])
         if new_choice.draw_button():
-            lg_count=0
-            for i in range(0,len(rs_list),1):
-                if i%2==0:
-                    a=rs_list[i]
-                    rs_list[i]=rs_list[i+1]
-                    rs_list[i+1]=a
-            if rs_count==0:
-                pygame.display.set_mode((1280,720), FULLSCREEN)
-                rs_count=1
+            rs_count=0
+            switch_lg(rs_list)
+            if rs_list[0]=='FULLSCREEN':
+                pygame.display.set_mode((1280,720),FULLSCREEN)
             else:
                 pygame.display.set_mode((1280,720))
-                rs_count=0
             switch_resolution=False
 def shop_display():
     global menu_active, shop_button_active, buff_choice, buff, get_money
@@ -568,6 +563,9 @@ def buff_information():
 def minigame_display():
     global menu_active, minigame_active, font
     if minigame_active:
+        money_text=font.render(f'${c.money}',True,"yellow")
+        money_text_rect=money_text.get_rect(center=(1180,47.5))
+        screen.blit(money_text,money_text_rect)
         back=button(30,30,180,40,1,2.5,lg_list[14])       
         minigame1=button(30,140,595,260,118,5,'')
         minigame2=button(655,140,595,260,121,5,'')
