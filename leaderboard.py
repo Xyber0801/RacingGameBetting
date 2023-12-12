@@ -28,7 +28,8 @@ BG = pygame.transform.scale(pygame.image.load('./assets/BXH/bg2.png'), (c.SCREEN
 Ldb = pygame.image.load('./assets/BXH/leaderboard00.png')
 Ldb = pygame.transform.scale(Ldb,(361,494))
 
-    
+brown_color  = pygame.Color(153, 82, 26)
+
 def filetxt(): #chuyển file screen
     pygame.display.set_caption("File text")
 
@@ -40,14 +41,19 @@ def filetxt(): #chuyển file screen
     cv2.waitKey(1000)
 
     #chọn ảnh để xuất file txt
-    iii = False #biến ảo để chạy vòng lặp
-    while iii==False:
-        img_path = filedialog.askopenfilename(title="Open a .png or .jpg file")
-        if os.path.isfile(img_path) and img_path.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.JPG')):
-            iii=True
+    # iii = False #biến ảo để chạy vòng lặp
+    # while iii==False:
+    #     img_path = filedialog.askopenfilename(title="Open a .png or .jpg file")
+    #     if os.path.isfile(img_path) and img_path.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.JPG')):
+    #         iii=True
 
+    img_path = filedialog.askopenfilename(title="Open a .png or .jpg file")
+    if not (os.path.isfile(img_path) and img_path.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.JPG'))):
+        return
 
-    while True:
+    running = True
+
+    while running:
         FILE_MOUSE_POS = pygame.mouse.get_pos()
 
         SCREEN.fill("black")
@@ -77,7 +83,7 @@ def filetxt(): #chuyển file screen
                 quit()
             if event.type == pygame.MOUSEBUTTONUP:
                 if FILE_BACK.checkForInput(FILE_MOUSE_POS):
-                    main_BXH()
+                    return
                 if FILE_SAVE.checkForInput(FILE_MOUSE_POS):
                     #xuất file txt
                     img = cv2.imread(img_path)
@@ -85,7 +91,6 @@ def filetxt(): #chuyển file screen
                     text = pytesseract.image_to_string(img, lang="eng")
                     with open("./assets/BXH/filetxt.txt", "w", encoding="utf-8") as f:
                         f.writelines(text)
-
 
                     #giao diện xuất file txt
                     root = Tk()
@@ -112,6 +117,11 @@ def filetxt(): #chuyển file screen
                                                                       ]), "w")
                         data = text_file.write(my_text.get(1.0,END))
                         text_file.close()
+                        
+
+                    def tk_quit():
+                        root.quit()
+                        root.destroy()
                     my_text = Text(root, width=40, height=10, font=("Helvetica", 16))   #hiển thị & sửa txt
                     my_text.pack(pady=20)
                     txt_button = Button(root,text= "Click to export the selected image to text", command = img_to_txt)
@@ -119,14 +129,15 @@ def filetxt(): #chuyển file screen
                     open_button = Button(root,text= "Open File", command = open_file)
                     open_button.pack(pady=20)
                     save_button = Button(root,text= "Save File", command = save_file)
-                    save_button.pack(pady=20)       
+                    save_button.pack(pady=20)  
+                    quit_button = Button(root, text="Quit", command=tk_quit).pack(pady=20)     
+                    root.protocol("WM_DELETE_WINDOW", tk_quit)
                     root.mainloop()
-
+                     
                     #thông báo thành công
                     CPL_TEXT = pygame.font.SysFont('cambria', 30).render("Complete.", True, "white")
                     CPL_RECT = CPL_TEXT.get_rect(center=(300, 500))
                     SCREEN.blit(CPL_TEXT, CPL_RECT)
-
 
                     pygame.display.update()
                     cv2.waitKey(1000)
@@ -197,8 +208,8 @@ def main_BXH(finished_racers): #main BXH screen
         #leaderboard text
         for i in range(5):
             racer = finished_racers.sprites()[i]
-            racer_text = pygame.font.SysFont('cambria', 30).render(f"{racer.name}", True, "white")
-            SCREEN.blit(racer_text, (600, 210 + i * 75))
+            racer_text = pygame.font.SysFont('cambria', 35).render(f"{racer.name}", True, brown_color)
+            SCREEN.blit(racer_text, (580, 210 + i * 75))
 
         #đổi màu button khi trỏ chuột
         for button in [Start_button, Screenshot_button, filetxt_button]:
