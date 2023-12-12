@@ -63,7 +63,7 @@ lg_list=['English','Tiếng Việt', #0
          'Short','Ngắn', #48
          'Medium','Trung bình', #50
          'Long', 'Dài', #52
-         'Track lenght','Độ dài đường đua', #54
+         'Track length','Độ dài đường đua', #54
          'Confirm the selection of \n track length?', 'Xác nhận chọn đường đua \n', #56
          'Previous', 'Trước đó', #58
          'Volume', 'Âm lượng', #60
@@ -79,7 +79,15 @@ lg_list=['English','Tiếng Việt', #0
          'Chibi Set', 'Nhóm Người Tí Hon', #80
          'Medieval Set', 'Nhóm Trung Cổ', #82
          'Monster Set', 'Nhóm Quái Vật', #84
-         'Car Set', 'Nhóm Xe Hơi' #86
+         'Car Set', 'Nhóm Xe Hơi', #86
+         'Winrate: \n%', 'Tỉ lệ thắng: \n%', #88
+         'Number of times played: \n', 'Số lần chơi: \n', #90
+         'Time played: \n', 'Thời điểm đã chơi: \n', #92
+         'Bet Character: \n', 'Nhân vật đã cược: \n', #94
+         'Rank: \n', 'Xếp hạng: \n', #96
+         'Money Bet: $\n', 'Số tiền đã cược: $\n', #98
+         'Winning Bet Money: $\n', 'Số tiền cược thắng: $\n', #100
+         'Lost Bet Money: $\n', 'Số tiền cược thua: $\n', #102
          ] 
 character_name=['PyBird','PyCat','PyDog','PyBear','PyFox','PyChibi Archer','PyChibi Enchantress','PyChibi Knight','PyChibi Swordsman',
                 'PyChibi Wizard','PyArcher','PyCommander','PyBlueKnight','PyRedKnight','PySamurai','PyKarasu Tengu','PyKitsune',
