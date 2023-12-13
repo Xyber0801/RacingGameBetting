@@ -577,15 +577,28 @@ def minigame_display():
             minigame_active=False
         if minigame1.draw_button():
             c.money+=int(Dino_game.start())
+            if rs_list[0]=='1280x720':
+                pygame.display.set_mode((1280,720))
+            else:
+                pygame.display.set_mode((1280,720), FULLSCREEN)
         if minigame2.draw_button():
             c.money+=int(Minigame.start())
-            pygame.display.set_mode((1280,720))    
+            if rs_list[0]=='1280x720':
+                pygame.display.set_mode((1280,720))
+            else:
+                pygame.display.set_mode((1280,720), FULLSCREEN)    
         if minigame3.draw_button():
             c.money+=int(Car_Game.start())
-            pygame.display.set_mode((1280,720))   
+            if rs_list[0]=='1280x720':
+                pygame.display.set_mode((1280,720))
+            else:
+                pygame.display.set_mode((1280,720), FULLSCREEN)   
         if minigame4.draw_button():   
             c.money+=int(Snake_game.start())
-            pygame.display.set_mode((1280,720))  
+            if rs_list[0]=='1280x720':
+                pygame.display.set_mode((1280,720))
+            else:
+                pygame.display.set_mode((1280,720), FULLSCREEN)  
 
 def go_to_distance_selection():
     c.go_to_distance_selection=False
