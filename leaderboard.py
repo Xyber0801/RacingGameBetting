@@ -208,8 +208,8 @@ def main_BXH(finished_racers): #main BXH screen
         #leaderboard text
         for i in range(5):
             racer = finished_racers.sprites()[i]
-            racer_text = pygame.font.SysFont('cambria', 35).render(f"{racer.name}", True, brown_color)
-            SCREEN.blit(racer_text, (580, 210 + i * 75))
+            racer_text = pygame.font.SysFont('cambria', 40).render(f"{racer.name}", True, brown_color)
+            SCREEN.blit(racer_text, (580, 200 + i * 75))
 
         #đổi màu button khi trỏ chuột
         for button in [Start_button, Screenshot_button, filetxt_button]:

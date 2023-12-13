@@ -84,7 +84,7 @@ class GameManager:
     
     font = pygame.font.SysFont("Constantia",32)
 
-    text_manager = pygame_textinput.TextInputManager(validator=lambda text: len(text) <= 10)
+    text_manager = pygame_textinput.TextInputManager(validator=lambda text: len(text) <= 7)
     textinput = pygame_textinput.TextInputVisualizer(text_manager, antialias=True, font_color=(255, 255, 255), cursor_color=(255, 255, 255), font_object=font)
     # A group of all the racers
     racers = pygame.sprite.Group()
