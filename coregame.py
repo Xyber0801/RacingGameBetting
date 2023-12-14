@@ -85,7 +85,7 @@ class GameManager:
     font = pygame.font.SysFont("Constantia",32)
 
     text_manager = pygame_textinput.TextInputManager(validator=lambda text: len(text) <= 7)
-    textinput = pygame_textinput.TextInputVisualizer(text_manager, antialias=True, font_color=(255, 255, 255), cursor_color=(255, 255, 255), font_object=font)
+    textinput = pygame_textinput.TextInputVisualizer(text_manager, antialias=True, font_color=(0, 0, 0), cursor_color=(255, 255, 255), font_object=font)
     # A group of all the racers
     racers = pygame.sprite.Group()
     racers_showcase = pygame.sprite.Group()
@@ -139,7 +139,7 @@ class GameManager:
             GameManager.textinput.update(CoreGame.events)
 
             # Draw
-            rename_to_text = font.render(_("Rename to:"), True, pygame.Color('white'))
+            rename_to_text = font.render(_("Rename to:"), True, pygame.Color('black'))
             screen.blit(rename_to_text, (700, 600))
             screen.blit(GameManager.textinput.surface, (700 + rename_to_text.get_width(), 600))
 
@@ -157,20 +157,20 @@ class GameManager:
         Gui.buttons.append(back_button)
 
         #betting texts
-        bet_amount_text = font.render(_("Bet Amount: ${}").format(GameManager.player_bet_amount), True, pygame.Color('white'))
+        bet_amount_text = font.render(_("Bet Amount: ${}").format(GameManager.player_bet_amount), True, pygame.Color("black"))
         bet_amount_text_pos = (100, 600)
 
         bet_on_who_text = font.render(
             _("Bet on racer: {}").format(GameManager.player.bet_on_who.name if GameManager.player.bet_on_who is not None else _("Not selected yet")),
             True,
-            pygame.Color('white')
+            pygame.Color("black")
         )
         bet_on_who_text_pos = (100, 650)
 
         player_money_text = font.render(
             _("Player's Money: ${}").format(GameManager.player.money),
             True,
-            pygame.Color('white')
+            pygame.Color("black")
         )
         player_money_text_pos = (100, 550)
 
@@ -183,7 +183,7 @@ class GameManager:
             racer_name_text = font.render(
                 GameManager.racers.sprites()[i].name,
                 True,
-                pygame.Color('white')
+                pygame.Color("black")
             )
             racer_name_text_pos = (50 + i * 250, 50)
             screen.blit(racer_name_text, racer_name_text_pos)
@@ -234,6 +234,9 @@ class GameManager:
         '''Displays and handles the racing screen'''
         Gui.reset_elements()
 
+        if (not BuffManager.buff_applied and GameManager.player.bet_on_who is not None):
+            BuffManager.apply_buff(GameManager.player.bet_on_who)
+
         CoreGame.screen.blit(CoreGame.background.image, (0, 0))
         SpellManager.update(screen)
         GameManager.racers.update(dt, current_time, GameManager.state == 'racing')     
@@ -247,7 +250,7 @@ class GameManager:
         player_money_text = font.render(
             _("Player's Money: ${}").format(GameManager.player.money),
             True,
-            pygame.Color('white')
+            pygame.Color("black")
         )
         player_money_text_pos = (0, 0)
         screen.blit(player_money_text, player_money_text_pos)
@@ -270,7 +273,7 @@ class GameManager:
         player_money_text = font.render(
             _("Player's Money: ${}").format(GameManager.player.money),
             True,
-            pygame.Color('white')
+            pygame.Color("black")
         )
         screen.blit(player_money_text, (0, 0))
 
@@ -290,10 +293,10 @@ class GameManager:
             return
         # Display player's money
         font = pygame.font.SysFont("Constantia",32)
-        player_money_text = font.render(_("Player's Money: ${}").format(GameManager.player.money), True, pygame.Color('white'))
+        player_money_text = font.render(_("Player's Money: ${}").format(GameManager.player.money), True, pygame.Color("black"))
         screen.blit(player_money_text, (400, 400))
 
-        text = font.render(_("You don't have enough money to bet, play a minigame to get more money"), True, pygame.Color('white'))
+        text = font.render(_("You don't have enough money to bet, play a minigame to get more money"), True, pygame.Color("black"))
         screen.blit(text, (100, 450))
 
         # Minigame button
@@ -332,7 +335,7 @@ class GameManager:
         for event in CoreGame.events:
             if event.type == countdown_event:
                 CoreGame.screen.blit(CoreGame.background.image, (0, 0))
-                text = font.render(str(countdown_number), True, pygame.Color('white'))
+                text = font.render(str(countdown_number), True, pygame.Color("black"))
                 CoreGame.screen.blit(text, (CoreGame.background.width // 2, CoreGame.background.height // 2))
                 pygame.display.update()
                 countdown_number -= 1
@@ -366,8 +369,8 @@ class GameManager:
         GameManager.player_bet_amount = 0
 
         BotManager.reset()
-
         Bookmaker.reset()
+        BuffManager.reset()
 
         GameManager.go_to_menu()
 
@@ -470,6 +473,24 @@ class SpellManager:
         return random.choices(SpellManager.spell_effects, weights=SpellManager.spells_probability)[0]
 
 class BuffManager():
+    buff_applied = False
+
+    def apply_buff(racer):
+        '''Apply the buff provided by constants.selected_buff to the racer'''
+        BuffManager.buff_applied = True
+
+        if (c.selected_buff & 0b1000 != 0):
+            BuffManager.speed_buff(racer)
+        if (c.selected_buff & 0b0100 != 0):
+            BuffManager.headstart(racer)
+        if (c.selected_buff & 0b0010 != 0):
+            BuffManager.negate_bad_spell(racer)
+        if (c.selected_buff & 0b0001 != 0):
+            BuffManager.fast_or_slow(racer)
+
+    def reset():
+        BuffManager.buff_applied = False
+
     def speed_buff(racer):
         '''Increase racer's speed by 10%'''
         racer.multiple_speed_modifier += 0.1

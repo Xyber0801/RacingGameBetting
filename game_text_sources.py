@@ -39,7 +39,7 @@ clicked=False #Biến nhấp chuột trong class button
 lg_list=['English','Tiếng Việt', #0
          'Play', 'Chơi', #2
          'History', 'Lịch Sử', #4
-         'Setting', 'Cài đặt', #6
+         'Settings', 'Cài đặt', #6
          'Quit', 'Thoát', #8
          'Shop', 'Cửa hàng', #10
          'Minigame', 'Trò chơi nhỏ', #12
@@ -130,10 +130,10 @@ info=[r'.\Assets\Character_Info\animal\Bird\PyBird_Info0.png', r'.\Assets\Charac
       r'.\Assets\Character_Info\car\3\PyCarBinh_Info0.png', r'.\Assets\Character_Info\car\3\PyCarBinh_Info1.png', r'.\Assets\Character_Info\car\3\PyCarBinh_Info2.png', r'.\Assets\Character_Info\car\3\PyCarBinh_Info3.png',
       r'.\Assets\Character_Info\car\4\PyCarDanh_Info0.png', r'.\Assets\Character_Info\car\4\PyCarDanh_Info1.png', r'.\Assets\Character_Info\car\4\PyCarDanh_Info2.png', r'.\Assets\Character_Info\car\4\PyCarDanh_Info3.png',
       r'.\Assets\Character_Info\car\5\PyCarDuy_Info0.png', r'.\Assets\Character_Info\car\5\PyCarDuy_Info1.png', r'.\Assets\Character_Info\car\5\PyCarDuy_Info2.png', r'.\Assets\Character_Info\car\5\PyCarDuy_Info3.png',
-      'It is the buff 01, which can help your character with its First effect!', 'Đây là buff 1, thứ giúp bạn với hiệu ứng đầu tiên của nó',
-      'It is the buff 02, which can help your character with its Second effect!', 'Đây là buff 2, thứ giúp bạn với hiệu ứng thứ hai của nó',
-      'It is the buff 03, which can help your character with its Third effect!', 'Đây là buff 3, thứ giúp bạn với hiệu ứng thứ ba của nó',
-      'It is the buff 04, which can help your character with its Fourth effect!', 'Đây là buff 4, thứ giúp bạn với hiệu ứng thứ tư của nó',
+      'This is "SPEED+PROMAX", which grants your racer +10% speed! \n "Brought to you by Orange(TM)"', 'Đây là "TỐCĐỘPROMAX", thứ sẽ cho tay đua của bạn +10% tốc độ! \n "Được mang đến cho bạn bởi Orange(TM)"',
+      'This is "Pay2Win", which grants your racer a 100px headstart! \n "Worse than Free Fire" - Some racer', 'Đây là "Nạp VIP", thứ sẽ cho tay đua của bạn xuất phát trước 100px! \n "Rác hơn cả lửa chùa" - một tay đua cho biết',
+      'This is "Cleanse", which can help your character negate the first bad effect on the racetrack! \n "FAKER, WHAT WAS THAT!?"', 'Đây là "Thanh tẩy", thứ có thể giúp nhân vật của bạn phủ nhận hiệu ứng xấu đầu tiên trên đường đua! \n "FAKER, WHAT WAS THAT!?"',
+      'It is the "Gambling Glory", which can either -10% speed or +10% speed to your racer! \n "90% of gamblers quit before they hit a jackpot"', 'Đây là "Tài xỉu 88", thứ có thể làm giảm tốc độ -20% hoặc tăng tốc độ +20% cho tay đua của bạn! \n "90% người chơi tài xỉu bỏ cuộc trước khi họ thắng lớn"',
       ]
 history_text = ['Winrate: \n%', 'Number of games played: \n', 'Time played: \n', 'Bet Character: \n', 'Rank: \n', 'Money Bet: $\n', 'Winning Bet Money: $\n', 'Lost Bet Money: $\n']
 history_list = []

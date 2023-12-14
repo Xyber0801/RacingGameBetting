@@ -15,8 +15,11 @@ money = 300
 #back button shananigans
 go_to_distance_selection = False
 
+# Buff select
+selected_buff = 0b0000
+
 # Backgrounds
-menu_background = pygame.transform.scale(pygame.image.load("./assets/Menu_Background/Menu0.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
+menu_background = pygame.transform.scale(pygame.image.load("./assets/Menu_Background/menu_new.jpg"), (SCREEN_WIDTH, SCREEN_HEIGHT))
 #race backgrounds are stored in a list, each background contains the image, the first lane y position, the start point and the end point
 grassland_long = ge.Background('grassland_long', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_long.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 50, 1216)
 grassland_medium = ge.Background('grassland_medium', SCREEN_WIDTH, SCREEN_HEIGHT, pygame.transform.scale(pygame.image.load("./assets/bg/grassland_medium.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)), 230, 150, 1100)

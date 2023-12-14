@@ -7,6 +7,11 @@ from minigame import Minigame
 from car_game import Car_Game
 from snake_game import Snake_game
 from game_text_sources import *
+
+from i18n import I18N
+import gettext
+global _
+
 pygame.mixer.pre_init(frequency=44100,size=-16,channels=2,buffer=512)
 pygame.init()
 clock=pygame.time.Clock()
@@ -15,7 +20,7 @@ pygame.display.set_caption('Menu')
 font=pygame.font.SysFont('Constantia',35)
 screen=pygame.display.set_mode((1280,720))
 #Background
-bg=pygame.transform.scale(pygame.image.load(r".\Assets\Menu_Background\Menu0.png"),(1280,720))
+bg= c.menu_background
 #Các class đối tượng
     #Class menu button
 class button():
@@ -106,12 +111,13 @@ class round_button():
 
 def game_name():
     global text_x, text_y, dtext
-    name_text=pygame.transform.scale(pygame.image.load(r'.\Assets\Menu_Background\name_text.png'),(730,140))
+    #name_text=pygame.transform.scale(pygame.image.load(r'.\Assets\Menu_Background\title.png'),(730,140))
+    name_text = pygame.image.load(_('./Assets/Menu_Background/title_en.png'))
     name_text_rect=name_text.get_rect(center=(text_x, text_y)) 
     text_y+=dtext
-    if (text_y>=70):
+    if (text_y>=100):
         dtext=-dtext
-    if (text_y<=100):
+    if (text_y<=120):
         dtext=-dtext
     screen.blit(name_text, name_text_rect)
         
@@ -126,10 +132,10 @@ def draw_rect(x,y,width,height,type,text_color,text_dis,text):
     #Hàm màn hình menu
 def menu_display():
     global menu_active, play_button_active, history_button_active, setting_button_active, shop_button_active, minigame_active
-    play=button(460,170,360,80,1,22.5,lg_list[2])
-    history=button(460,270,360,80,1,22.5,lg_list[4])
-    setting=button(460,370,360,80,1,22.5,lg_list[6])
-    quit=button(460,470,360,80,1,22.5,lg_list[8])
+    play=button(460,270,360,80,1,22.5,lg_list[2])
+    history=button(460,370,360,80,1,22.5,lg_list[4])
+    setting=button(460,470,360,80,1,22.5,lg_list[6])
+    quit=button(460,570,360,80,1,22.5,lg_list[8])
     shop=button(1024,16,240,40,1,2.5,lg_list[10])
     mini_game=button(1024,76,240,40,1,2.5,lg_list[12])
     if play.draw_button():
@@ -427,11 +433,11 @@ def setting_display():
     language_choice=button(532,375,180,40,1,2.5,lg_list[0])
     more_rs=button(797,460,40,40,1,1.5,'...')
     resolution_choice=button(532,460,250,40,1,2.5,rs_list[0])
-    volume_text=font.render(lg_list[60],True,(255,255,255))
+    volume_text=font.render(lg_list[60],True,(0,0,0))
     volume_text_rect=volume_text.get_rect(center=(400,322.5))   
-    language_text=font.render(lg_list[62],True,(255,255,255))
+    language_text=font.render(lg_list[62],True,(0,0,0))
     language_text_rect=language_text.get_rect(center=(415,392.5))
-    resolution_text=font.render(lg_list[64],True,(255,255,255))
+    resolution_text=font.render(lg_list[64],True,(0,0,0))
     resolution_text_rect=resolution_text.get_rect(center=(420,477.5))
     screen.blit(volume_text,volume_text_rect)   
     screen.blit(language_text,language_text_rect)
@@ -467,6 +473,8 @@ def setting_display():
             rs_count=0
             switch_resolution=False
 def switch_lg(list):
+    locale = 'en_US' if lg_list[0] == "English" else 'vi_VN'
+    I18N.change_locale(locale)
     for i in range(0,len(list),1):
         if i%2==0:
             b=list[i]
@@ -493,7 +501,7 @@ def setting_language():
                 pygame.display.set_mode((1280,720))
             switch_resolution=False
 def shop_display():
-    global menu_active, shop_button_active, buff_choice, buff, get_money
+    global menu_active, shop_button_active, buff_choice, buff, get_money, selected_buff
     buff_1=round_button(172,280,140,30,'Buff 1')
     buff_2=round_button(484,280,140,30,'Buff 2')
     buff_3=round_button(796,280,140,30,'Buff 3')
@@ -511,17 +519,21 @@ def shop_display():
     if buff_1.draw_button():
         buff_choice=True
         buff=1
+        selected_buff = 0b0001
     if buff_2.draw_button():
         buff_choice=True
         buff=2
+        selected_buff = 0b0010
     if buff_3.draw_button():
         buff_choice=True
         buff=3
+        selected_buff = 0b0100
     if buff_4.draw_button():
         buff_choice=True
         buff=4
+        selected_buff = 0b1000
 def buff_choosing():
-    global buff_choice, buff_info, buff, shop_button_active, get_money, minigame_active, actual_buff
+    global buff_choice, buff_info, buff, shop_button_active, get_money, minigame_active, actual_buff, selected_buff
     buy=button(295,600,180,40,1,2.5,lg_list[68])
     cancel=button(505,600,180,40,1,2.5,lg_list[44])
     more_info=button(715,600,270,40,1,2.5,lg_list[46])
@@ -535,7 +547,7 @@ def buff_choosing():
                 buff_choice=False          
             else:
                 c.money-=100
-                actual_buff=buff
+                c.selected_buff |= selected_buff
                 print(actual_buff)
                 buff_choice=False
             
@@ -624,10 +636,14 @@ def menu():
     print("menu running")
     menu_running=True
     menu_active = True
+
+    locale = 'en_US' if lg_list[0] == "English" else 'vi_VN'
+    I18N.change_locale(locale)
+
     if c.go_to_distance_selection:
         go_to_distance_selection()
     pygame.mixer_music.load(r".\assets\music\menu_music.mp3")
-    pygame.mixer_music.play(-1)
+    pygame.mixer_music.play(-1, fade_ms=1500)
     while menu_running:
         clock.tick(60)       
         for event in pygame.event.get():

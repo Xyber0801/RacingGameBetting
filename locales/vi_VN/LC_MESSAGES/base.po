@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-12-10 14:07+0700\n"
-"PO-Revision-Date: 2023-12-10 14:08+0700\n"
+"POT-Creation-Date: 2023-12-14 22:14+0700\n"
+"PO-Revision-Date: 2023-12-14 22:15+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -13,48 +13,56 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: coregame.py:135
+#: coregame.py:142
 msgid "Rename to:"
 msgstr "Đổi tên thành:"
 
-#: coregame.py:146
+#: coregame.py:156
+msgid "Back"
+msgstr "Trở lại"
+
+#: coregame.py:160
 msgid "Bet Amount: ${}"
 msgstr "Số tiền đặt cược: ${}"
 
-#: coregame.py:150
+#: coregame.py:164
 msgid "Bet on racer: {}"
 msgstr "Đặt cược trên tay đua: {}"
 
-#: coregame.py:150
+#: coregame.py:164
 msgid "Not selected yet"
 msgstr "Chưa được chọn"
 
-#: coregame.py:157 coregame.py:232 coregame.py:255 coregame.py:276
+#: coregame.py:171 coregame.py:248 coregame.py:271 coregame.py:293
 msgid "Player's Money: ${}"
 msgstr "Số tiền của người chơi: ${}"
 
-#: coregame.py:189
+#: coregame.py:203
 msgid "Bet on {}"
 msgstr "Đặt cược vào {}"
 
-#: coregame.py:193
+#: coregame.py:207
 msgid "Rename {}"
 msgstr "Đổi tên {}"
 
-#: coregame.py:210
+#: coregame.py:224
 msgid ""
 "Other gamblers have bet \n"
 " ${} on this racer."
 msgstr "Những người chơi khác đã đặt cược ${} trên tay đua này."
 
-#: coregame.py:214
+#: coregame.py:230
 msgid "Start"
 msgstr "Bắt đầu"
 
-#: coregame.py:279
+#: coregame.py:296
 msgid "You don't have enough money to bet, play a minigame to get more money"
 msgstr "Bạn không còn đủ tiền để đặt cược, hãy chơi minigame để nhận thêm tiền"
 
-#: coregame.py:283
+#: coregame.py:300
 msgid "Minigame"
 msgstr "Minigame"
+
+#: menu.py:116
+msgid "./Assets/Menu_Background/title_en.png"
+msgstr "./Assets/Menu_Background/title.png"

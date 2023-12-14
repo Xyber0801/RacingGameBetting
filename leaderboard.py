@@ -5,12 +5,6 @@ from button import ButtonA
 import game_text_sources as g 
 pygame.init()
 
-#import pyautogui  #screenshot
-
-from ctypes import POINTER, WINFUNCTYPE, windll
-from ctypes.wintypes import BOOL, HWND, RECT
-
-
 from tkinter import *  #file
 from tkinter import filedialog
 
@@ -40,13 +34,6 @@ def filetxt(): #chuyển file screen
     SCREEN.blit(CHOOSE_TEXT, CHOOSE_RECT)
     pygame.display.update()
     cv2.waitKey(1000)
-
-    #chọn ảnh để xuất file txt
-    # iii = False #biến ảo để chạy vòng lặp
-    # while iii==False:
-    #     img_path = filedialog.askopenfilename(title="Open a .png or .jpg file")
-    #     if os.path.isfile(img_path) and img_path.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.JPG')):
-    #         iii=True
 
     img_path = filedialog.askopenfilename(title=g.lg_list[106])
     if not (os.path.isfile(img_path) and img_path.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.JPG'))):
@@ -176,19 +163,16 @@ def filetxt(): #chuyển file screen
 def main_BXH(finished_racers): #main BXH screen
     pygame.display.set_caption("BXH")
 
+    pygame.mixer.stop()
+    pygame.mixer.music.load("./assets/music/leaderboard_music.mp3")
+    pygame.mixer.music.play(-1)
+
     running = True
 
     while running:
         SCREEN.blit(BG, (0,0))
         SCREEN.blit(Ldb, (460,113))
         BXH_MOUSE_POS = pygame.mouse.get_pos()  #kiểm tra chuột
-
-        #lấy tọa độ cửa sổ pygame
-        hwnd = pygame.display.get_wm_info()["window"]            # get our window ID:
-        prototype = WINFUNCTYPE(BOOL, HWND, POINTER(RECT))            # Jump through all the ctypes hoops:
-        paramflags = (1, "hwnd"), (2, "lprect")
-        GetWindowRect = prototype(("GetWindowRect", windll.user32), paramflags)
-        rect = GetWindowRect(hwnd)            # finally get our data!
         
         #button
         ST = pygame.image.load("./assets/BXH/button00.png")

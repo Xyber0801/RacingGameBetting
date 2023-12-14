@@ -16,13 +16,11 @@ pygame.key.set_repeat(200, 25)
 def __main__():
     # Logingin() returns false if the user exits the login screen
     # Logginin() returns true if the user logins successfully
-    # if (not Logingin()):
-    #     pygame.quit()
-    #     quit()
-
-    running = True
-
-    while running:
+    if (not Logingin()):
+        pygame.quit()
+        quit()
+        
+    while True:
         menu()
         CoreGame.start(screen, clock)
 

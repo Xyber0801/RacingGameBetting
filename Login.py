@@ -121,7 +121,8 @@ def Registerin():
             window.close()
 
         if event == "Login":
-            Logingin()
+            running = False
+            window.close()
             break
         if event == "Create an account":
             if values["password"] == values["confirm"]:
@@ -131,6 +132,8 @@ def Registerin():
                 values_list = list(values.values())
                 worksheet.append_row(values_list)
                 sg.popup("Saved")
+                running = False
+                window.close()
                 break
             else:
                 sg.popup("Please enter the same password in both password fields.")
