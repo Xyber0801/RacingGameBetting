@@ -112,11 +112,14 @@ def Registerin():
     ]
     window = sg.Window("Register", layout = layout)
     
-    while True:
+    running = True
+
+    while running:
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == "Exit":
-            window = 0
-            break
+            running = False
+            window.close()
+
         if event == "Login":
             Logingin()
             break
@@ -160,7 +163,10 @@ def FaceIDLogin():
     while running:
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == "Exit":
-            break
+            running = False
+            window.close()
+            return False
+            
         if event == "Load picture":
             Tk().withdraw()
             inputedPic = face_recognition.load_image_file(askopenfilename())
@@ -188,7 +194,6 @@ def FaceIDLogin():
                     usname = worksheet.cell(i, 1).value
             if soldier == 0:
                 window["confirm"].update("Fail")
-                return False
             else:
                 window["confirm"].update("Success")
                 running = False
@@ -219,7 +224,8 @@ def FaceIDRegisterin():
     while running:
         event, values = window.read()
         if event == "Exit" or event == sg.WINDOW_CLOSED:
-            break
+            running = False
+            window.close()            
         if event == "Load picture":
             Tk().withdraw()
             inputedPic = face_recognition.load_image_file(askopenfilename())

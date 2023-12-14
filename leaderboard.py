@@ -2,6 +2,7 @@
 import pygame #game
 #import sys
 from button import ButtonA
+import game_text_sources as g 
 pygame.init()
 
 #import pyautogui  #screenshot
@@ -34,7 +35,7 @@ def filetxt(): #chuyển file screen
     pygame.display.set_caption("File text")
 
     #chú ý
-    CHOOSE_TEXT = pygame.font.SysFont('cambria', 30).render("Choose an image (obligatory)", True, "white")
+    CHOOSE_TEXT = pygame.font.SysFont('cambria', 30).render(g.lg_list[104], True, "white")
     CHOOSE_RECT = CHOOSE_TEXT.get_rect(center=(670, 600))
     SCREEN.blit(CHOOSE_TEXT, CHOOSE_RECT)
     pygame.display.update()
@@ -47,7 +48,7 @@ def filetxt(): #chuyển file screen
     #     if os.path.isfile(img_path) and img_path.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.JPG')):
     #         iii=True
 
-    img_path = filedialog.askopenfilename(title="Open a .png or .jpg file")
+    img_path = filedialog.askopenfilename(title=g.lg_list[106])
     if not (os.path.isfile(img_path) and img_path.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.JPG'))):
         return
 
@@ -63,16 +64,16 @@ def filetxt(): #chuyển file screen
         SCREEN.blit(picture , (350,100))
 
 
-        FILE_BACK = ButtonA(image=None, pos = (640,460), text_input="BACK", font=pygame.font.SysFont('cambria', 30), base_color="White", hovering_color="green")
+        FILE_BACK = ButtonA(image=None, pos = (640,460), text_input=g.lg_list[124], font=pygame.font.SysFont('cambria', 30), base_color="White", hovering_color="green")
 
         FILE_BACK.changeColor(FILE_MOUSE_POS)
         FILE_BACK.update(SCREEN)
 
-        PC_TEXT = pygame.font.SysFont('cambria', 30).render("SELECTED PHOTO:", True, "Yellow")
+        PC_TEXT = pygame.font.SysFont('cambria', 30).render(g.lg_list[108], True, "Yellow")
         PC_RECT = PC_TEXT.get_rect(center=(500, 50))
         SCREEN.blit(PC_TEXT, PC_RECT)
 
-        FILE_SAVE = ButtonA(image=None, pos = (300,460), text_input="SAVE TO TEXT", font=pygame.font.SysFont('cambria', 30), base_color="White", hovering_color="green")
+        FILE_SAVE = ButtonA(image=None, pos = (300,460), text_input=g.lg_list[126], font=pygame.font.SysFont('cambria', 30), base_color="White", hovering_color="green")
 
         FILE_SAVE.changeColor(FILE_MOUSE_POS)
         FILE_SAVE.update(SCREEN)
@@ -124,18 +125,18 @@ def filetxt(): #chuyển file screen
                         root.destroy()
                     my_text = Text(root, width=40, height=10, font=("Helvetica", 16))   #hiển thị & sửa txt
                     my_text.pack(pady=20)
-                    txt_button = Button(root,text= "Click to export the selected image to text", command = img_to_txt)
+                    txt_button = Button(root,text= g.lg_list[110], command = img_to_txt)
                     txt_button.pack(pady=20)
-                    open_button = Button(root,text= "Open File", command = open_file)
+                    open_button = Button(root,text= g.lg_list[112], command = open_file)
                     open_button.pack(pady=20)
-                    save_button = Button(root,text= "Save File", command = save_file)
+                    save_button = Button(root,text= g.lg_list[114], command = save_file)
                     save_button.pack(pady=20)  
-                    quit_button = Button(root, text="Quit", command=tk_quit).pack(pady=20)     
+                    quit_button = Button(root, text=g.lg_list[8], command=tk_quit).pack(pady=20)     
                     root.protocol("WM_DELETE_WINDOW", tk_quit)
                     root.mainloop()
                      
                     #thông báo thành công
-                    CPL_TEXT = pygame.font.SysFont('cambria', 30).render("Complete.", True, "white")
+                    CPL_TEXT = pygame.font.SysFont('cambria', 30).render(g.lg_list[116], True, "white")
                     CPL_RECT = CPL_TEXT.get_rect(center=(300, 500))
                     SCREEN.blit(CPL_TEXT, CPL_RECT)
 
@@ -193,17 +194,17 @@ def main_BXH(finished_racers): #main BXH screen
         ST = pygame.image.load("./assets/BXH/button00.png")
         ST = pygame.transform.scale(ST, (150, 170))
         Start_button = ButtonA(image=ST, pos = (665, 600), 
-                       text_input="Start", font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
+                       text_input="Menu", font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
         
         Scr = pygame.image.load("./assets/BXH/button00.png")
         Scr = pygame.transform.scale(Scr, (150, 170))
         Screenshot_button = ButtonA(image=Scr, pos = (500,620), 
-                       text_input="Screenshot", font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
+                       text_input=g.lg_list[118], font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
         
         file = pygame.image.load("./assets/BXH/button00.png")
         file = pygame.transform.scale(file, (150, 170))
         filetxt_button = ButtonA(image=file, pos = (800,620), 
-                       text_input="File text", font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
+                       text_input=g.lg_list[120], font=pygame.font.SysFont('cambria', 30), base_color="red", hovering_color="yellow")
 
         #leaderboard text
         for i in range(5):
@@ -246,18 +247,18 @@ def main_BXH(finished_racers): #main BXH screen
                     path = filedialog.asksaveasfilename(defaultextension='.png',
                                                                       filetypes=[
                                                                           ("PNG file", ".png"),
-                                                                      ],title='Save image as (obligatory)')
+                                                                      ],title=g.lg_list[122])
                     # Save image
                     while not path or os.path.splitext(path)[1] != ".png":
                         path = filedialog.asksaveasfilename(defaultextension='.png',
                                                                       filetypes=[
                                                                           ("PNG file", ".png"),
-                                                                      ],title='Save image as (obligatory)')
+                                                                      ],title=g.lg_list[122])
                     pygame.image.save(pct, path)
                     
                     
                     #thông báo hoàn thành
-                    CPL_TEXT = pygame.font.SysFont('cambria', 30).render("Complete.", True, "white")
+                    CPL_TEXT = pygame.font.SysFont('cambria', 30).render(g.lg_list[116], True, "white")
                     CPL_RECT = CPL_TEXT.get_rect(center=(330, 600))
                     SCREEN.blit(CPL_TEXT, CPL_RECT)
                     pygame.display.update()

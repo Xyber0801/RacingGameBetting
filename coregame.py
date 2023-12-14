@@ -355,6 +355,7 @@ class GameManager:
         #update history list
         if GameManager.finished_racers.sprites():
             delta_money = GameManager.player.money - GameManager.player_money_original
+            c.money += delta_money
             new_data =  [str(datetime.datetime.now().time()), GameManager.player.bet_on_who.name, GameManager.finished_racers.sprites().index(GameManager.player.bet_on_who) + 1, GameManager.player_bet_amount, 0 if delta_money < 0 else delta_money, 0 if delta_money > 0 else -delta_money]
             for data in new_data:   
                 gts.history_list.append(data)

@@ -177,13 +177,13 @@ def environment_display():
         ev=lg_list[20]
     #Hàm chọn Yes/No (Môi trường)
 def evm_choosing():
-    global chr_set_active, ev_choosing, ev, play_button_active, actual_ev
+    global chr_set_active, ev_choosing, ev, play_button_active, distance_active
     yes=button(340,600,180,40,1,2.5,lg_list[24])
     no=button(760,600,180,40,1,2.5,lg_list[26])
     if ev_choosing:   
         draw_rect(215,498.25,850,191.75,113,(0,0,0),30,lg_list[28].replace('\n',ev))
         if yes.draw_button():
-            chr_set_active=True
+            distance_active=True
             play_button_active=False
             ev_choosing=False
         if no.draw_button():
@@ -200,7 +200,7 @@ def character_set_display():
     back=button(30,30,180,40,1,2.5,lg_list[14])   
     draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[40])   
     if back.draw_button():
-        play_button_active=True
+        distance_active=True
         chr_set_active=False
         chr_set_choosing=False
     if set1.draw_button():
@@ -225,14 +225,16 @@ def character_set_display():
         chr_set_index=5
     #Hàm chọn Yes/No/More Info (set nhân vật)
 def chr_choosing():
-    global chr_set_active, chr_set_choosing, chr_set, distance_active, chr_set_info, chr_set_info_button, chr_set_index
+    global chr_set_active, chr_set_choosing, chr_set, distance_active, chr_set_info, chr_set_info_button, chr_set_index, menu_running
     yes=button(295,620,180,40,1,2.5,lg_list[24])
     no=button(505,620,180,40,1,2.5,lg_list[26])
     chr_set_info_button=button(715,620,270,40,1,2.5,lg_list[46])
     if chr_set_choosing:
         draw_rect(215,540,850,150,113,(0,0,0),22.5,chr_set)
         if yes.draw_button():
-            distance_active=True
+            initial_setup()
+            pygame.mixer_music.stop()
+            menu_running=False
             chr_set_active=False
             chr_set_choosing=False
         if no.draw_button():
@@ -294,17 +296,24 @@ def chr_information():
         unit=4*(chr-1)+2
     #Hàm chọn độ dài đường đua
 def distance_display():
-    global distance_active, chr_set_active, distance_choosing, distance
+    global distance_active, chr_set_active, distance_choosing, distance, ev, play_button_active
+    ev_count=0
+    if ev==lg_list[16]:
+        ev_count=0
+    elif ev==lg_list[18]:
+        ev_count=1
+    else:
+        ev_count=2
     dis1=button(29,388.25,388,80,1,22.5,lg_list[48])
     dis2=button(446,388.25,388,80,1,22.5,lg_list[50])
     dis3=button(863,388.25,388,80,1,22.5,lg_list[52])
     back=button(30,30,180,40,1,2.5,lg_list[14])
-    draw_rect(29,140,388,218.25,12,(0,0,0),22.5,'')
-    draw_rect(446,140,388,218.25,15,(0,0,0),22.5,'')
-    draw_rect(863,140,388,218.25,18,(0,0,0),22.5,'')
+    draw_rect(29,140,388,218.25,130+ev_count,(0,0,0),22.5,'')
+    draw_rect(446,140,388,218.25,133+ev_count,(0,0,0),22.5,'')
+    draw_rect(863,140,388,218.25,136+ev_count,(0,0,0),22.5,'')
     draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[54])   
     if back.draw_button():
-        chr_set_active=True
+        play_button_active=True
         distance_active=False
         distance_choosing=False
     if dis1.draw_button():
@@ -318,15 +327,13 @@ def distance_display():
         distance=lg_list[52]   
     #Hàm chọn Yes/No(độ dài đường đua)
 def dis_choosing():
-    global distance_choosing, distance_active, distance, menu_running
+    global distance_choosing, distance_active, distance, chr_set_active
     yes=button(360,600,180,40,1,2.5,lg_list[24])
     no=button(740,600,180,40,1,2.5,lg_list[26])
     if distance_choosing:
         draw_rect(240,498.25,800,191.75,113,(0,0,0),30,lg_list[56].replace('\n',distance))
         if yes.draw_button():
-            initial_setup()
-            pygame.mixer_music.stop()
-            menu_running=False
+            chr_set_active=True
             distance_active=False
             distance_choosing=False
         if no.draw_button():
@@ -606,10 +613,10 @@ def go_to_distance_selection():
     global menu_active, play_button_active, ev_choosing, ev, chr_set_active, chr_set_choosing, chr_set, chr_set_index, distance_active
     ev_choosing=False
     menu_active=False
-    chr_set_active=False
+    chr_set_active=True
     chr_set_choosing=False
     play_button_active=False
-    distance_active=True
+    distance_active=False
     
 #Chạy menu
 def menu():

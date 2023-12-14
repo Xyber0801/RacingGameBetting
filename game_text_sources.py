@@ -88,6 +88,18 @@ lg_list=['English','Tiếng Việt', #0
          'Money Bet: $\n', 'Số tiền đã cược: $\n', #98
          'Winning Bet Money: $\n', 'Số tiền cược thắng: $\n', #100
          'Lost Bet Money: $\n', 'Số tiền cược thua: $\n', #102
+         'Choose an image (obligatory)', 'Chọn hình ảnh (bắt buộc)', #104
+         'Open a .png or .jpg file', 'Mở tệp .png hoặc jpg', #106
+         'SELECTED PHOTO:', 'ẢNH ĐÃ CHỌN', #108
+         'Click to export the selected image to text', 'Nhấn để xuất ảnh đã chọn thành văn bản', #110
+         'Open File', 'Mở Tệp', #112
+         'Save File', 'Lưu Tệp', #114
+         'Complete.', 'Hoàn thành.', #116
+         'Screenshot', 'Chụp màn hình', #118
+         'File text', 'Tệp văn bản', #120
+         'Save image as (obligatory)', 'Lưu ảnh thành (bắt buộc)', #122
+         'BACK', 'QUAY LẠI', #124
+         'SAVE TO TEXT', 'LƯU THÀNH VĂN BẢN', #126
          ] 
 character_name=['PyBird','PyCat','PyDog','PyBear','PyFox','PyChibi Archer','PyChibi Enchantress','PyChibi Knight','PyChibi Swordsman',
                 'PyChibi Wizard','PyArcher','PyCommander','PyBlueKnight','PyRedKnight','PySamurai','PyKarasu Tengu','PyKitsune',
@@ -130,9 +142,9 @@ image_list=[r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a1.png", r".\Assets
             r".\Assets\Environment\Forest\forest0.png", r".\Assets\Environment\Forest\forest1.png", r".\Assets\Environment\Forest\forest2.png", #4
             r".\Assets\Environment\Grassland\grassland0.png", r".\Assets\Environment\Grassland\grassland1.png", r".\Assets\Environment\Grassland\grassland2.png", #7
             r".\Assets\Environment\Sunset\sunset0.png", r".\Assets\Environment\Sunset\sunset1.png", r".\Assets\Environment\Sunset\sunset2.png", #10
-            r".\Assets\Track_Distance\Short\forest_short0.png", r".\Assets\Track_Distance\Short\forest_short1.png", r".\Assets\Track_Distance\Short\forest_short2.png", #13
-            r".\Assets\Track_Distance\Medium\forest_medium0.png", r".\Assets\Track_Distance\Medium\forest_medium1.png", r".\Assets\Track_Distance\Medium\forest_medium2.png", #16
-            r".\Assets\Track_Distance\Long\forest_long0.png", r".\Assets\Track_Distance\Long\forest_long1.png", r".\Assets\Track_Distance\Long\forest_long2.png", #19
+            "", "", "", #13
+            "", "", "", #16
+            "", "", "", #19
             r".\Assets\Character_Set_Image\Animal\Animal0.png", r".\Assets\Character_Set_Image\Animal\Animal1.png", r".\Assets\Character_Set_Image\Animal\Animal2.png", #22
             r".\Assets\Character_Set_Image\Chibi\Chibi0.png", r".\Assets\Character_Set_Image\Chibi\Chibi1.png", r".\Assets\Character_Set_Image\Chibi\Chibi2.png", #25
             r".\Assets\Character_Set_Image\Medival\medival0.png", r".\Assets\Character_Set_Image\Medival\medival1.png", r".\Assets\Character_Set_Image\Medival\medival2.png", #28
@@ -169,4 +181,8 @@ image_list=[r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a1.png", r".\Assets
             r".\Assets\minigame_image\minigame2_0.png", r".\Assets\minigame_image\minigame2_1.png", r".\Assets\minigame_image\minigame2_2.png", #121
             r".\Assets\minigame_image\minigame3_0.png", r".\Assets\minigame_image\minigame3_1.png", r".\Assets\minigame_image\minigame3_2.png", #124
             r".\Assets\minigame_image\minigame4_0.png", r".\Assets\minigame_image\minigame4_1.png", r".\Assets\minigame_image\minigame4_2.png", #127
-            r".\assets\Menu_Background\history_list1.jpg",]
+            r".\assets\Menu_Background\history_list1.jpg", #129
+            r".\assets\Track_Distance\Short\forest_short.png", r".\assets\Track_Distance\Short\grassland_short.png", r".\assets\Track_Distance\Short\sunset_short.png", #130
+            r".\assets\Track_Distance\Medium\forest_medium.png", r".\assets\Track_Distance\Medium\grassland_medium.png", r".\assets\Track_Distance\Medium\sunset_medium.png", #133
+            r".\assets\Track_Distance\Long\forest_long.png", r".\assets\Track_Distance\Long\grassland_long.png", r".\assets\Track_Distance\Long\sunset_long.png", #136
+            ]
