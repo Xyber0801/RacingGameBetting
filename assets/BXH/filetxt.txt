@@ -1,9 +1,9 @@
 LEADERBOARD
-7 Racer 1
+7 Racer 5
 
 Racer 3
-Racer 2
 Racer 4
+Racer 1
 
-Racer 5
+Racer 2
 
