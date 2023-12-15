@@ -302,18 +302,30 @@ def FaceIDRegisterin():
                 sg.popup("Saved")
 
 #Hàm lưu dữ liệu khi tắt game
-def SaveGame (MoneyV, LanguageV, BuffV, WinrateV, Row):
-    Save(Row, MONEY_COLUMN, MoneyV)
-    Save(Row, LANGUAGE_COLUMN, LanguageV)
-    Save(Row, BUFF_COLUMN, BuffV)
-    Save(Row, WINRATE_COLUMN, WinrateV)
+def SaveGame (MoneyV, LanguageV, BuffV, WinrateV, Username):
+    Row = 1
+    usname = worksheet.cell(Row, USERNAME_COLUMN).value
+    while usname != None:
+        if usname == Secure(Username):
+            Save(Row, MONEY_COLUMN, MoneyV)
+            Save(Row, LANGUAGE_COLUMN, LanguageV)
+            Save(Row, BUFF_COLUMN, BuffV)
+            Save(Row, WINRATE_COLUMN, WinrateV)
+        else:
+            Row = Row + 1
 
 #Hàm lấy dữ liệu khi khởi động game
-def LoadData (M, L, B, W, R):
-    M = worksheet.cell(R, MONEY_COLUMN).value
-    L = worksheet.cell(R, LANGUAGE_COLUMN).value
-    B = worksheet.cell(R, BUFF_COLUMN).value
-    W = worksheet.cell(R, WINRATE_COLUMN).value
+def LoadData (M, L, B, W, Usname):
+    Row = 1
+    usname = worksheet.cell(Row, USERNAME_COLUMN).value
+    while usname != None:
+        if usname == Secure(Usname):
+            M = worksheet.cell(Row, MONEY_COLUMN).value
+            L = worksheet.cell(Row, LANGUAGE_COLUMN).value
+            B = worksheet.cell(Row, BUFF_COLUMN).value
+            W = worksheet.cell(Row, WINRATE_COLUMN).value
+        else:
+            Row = Row + 1
 
 def CheckPassword (SavedPassword, InputedPassword):
     if SavedPassword == Secure(InputedPassword):
