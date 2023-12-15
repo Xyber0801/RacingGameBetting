@@ -21,11 +21,11 @@ worksheet = sh.sheet1
 EMAIL_COLUMN = 1
 USERNAME_COLUMN = 2
 PASSWORD_COLUMN = 3
-FACE_ID_COLUMN = 5
-MONEY_COLUMN = 6
-LANGUAGE_COLUMN = 7
-BUFF_COLUMN = 8
-WINRATE_COLUMN = 9
+FACE_ID_COLUMN = 4
+MONEY_COLUMN = 5
+LANGUAGE_COLUMN = 6
+BUFF_COLUMN = 7
+WINRATE_COLUMN = 8
 
 
 #Hàm lưu dữ liệu
@@ -148,16 +148,35 @@ def Registerin():
             break
         if event == "Create an account":
             if values["password"] == values["confirm"]:
-                rannumber = random.randint(100000, 999999)
-                SendEmail(rannumber, values["email"])
-                if Verify(rannumber):
-                    values["email"] = Secure(values["email"])
-                    values["username"] = Secure(values["username"])
-                    values["password"] = Secure(values["password"])
-                    values["confirm"] = Secure(values["confirm"])
-                    values_list = list(values.values())
-                    worksheet.append_row(values_list)
-                    sg.popup("Saved")
+                soldier = 0
+                row = 1
+                usname = worksheet.cell(row, USERNAME_COLUMN).value
+                while usname != None:
+                    if usname == Secure(values["username"]):
+                        sg.popup("The account has already exist, please try another one or login in to continue")
+                        if FaceIDLogin():
+                            soldier = 1
+                            break
+                        else:
+                           soldier = 0
+                           row = row + 1
+                           break
+                    else:
+                        row = row + 1
+                        usname = worksheet.cell(row, USERNAME_COLUMN).value
+                        soldier = 1 
+                if soldier == 1 or row == 1:
+                    rannumber = random.randint(100000, 999999)
+                    SendEmail(rannumber, values["email"])
+                    if Verify(rannumber):
+                        values["email"] = Secure(values["email"])
+                        values["username"] = Secure(values["username"])
+                        values["password"] = Secure(values["password"])
+                        values["confirm"] = Secure(values["confirm"])
+                        worksheet.update_cell(row, EMAIL_COLUMN, values["email"])
+                        worksheet.update_cell(row, USERNAME_COLUMN, values["username"])
+                        worksheet.update_cell(row, PASSWORD_COLUMN, values["password"])
+                        sg.popup("Saved")
             else:
                 sg.popup("Please enter the same password in both password fields.")
 
@@ -263,13 +282,17 @@ def FaceIDRegisterin():
             usname = worksheet.cell(row, USERNAME_COLUMN).value
             while usname != None:
                 if usname == Secure(values["username"]):
-                    
-                    worksheet.update_cell(row, FACE_ID_COLUMN, inputedPic_encoding)
-                    soldier = 1
-                    sg.popup("Saved")
-                    running = False
-                    window.close()
-                    break
+                    sg.popup("The account has already exist, please try another one or login in to continue")
+                    if Logingin():
+                        worksheet.update_cell(row, FACE_ID_COLUMN, inputedPic_encoding)
+                        soldier = 1
+                        sg.popup("Saved")
+                        running = False
+                        window.close()
+                        break
+                    else:
+                        soldier = 1
+                        break
                 else:
                     row = row + 1
                     usname = worksheet.cell(row, USERNAME_COLUMN).value
@@ -393,7 +416,7 @@ def SamePic(Pic1, Pic2):
             return False
     return True
 
-
+Logingin()
 
 
 
