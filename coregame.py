@@ -143,8 +143,11 @@ class GameManager:
             screen.blit(rename_to_text, (700, 600))
             screen.blit(GameManager.textinput.surface, (700 + rename_to_text.get_width(), 600))
 
-        
         GameManager.state = 'betting'
+
+        #Screen name infobox
+        screen_name_infobox = graphics_elements.Title(415, 5, 450, 80, _("Betting Screen"))
+        Gui.infoboxes.append(screen_name_infobox)
 
         #back button
         def go_to_distance_selection():
@@ -153,7 +156,7 @@ class GameManager:
             CoreGame.running = False
             return
 
-        back_button = graphics_elements.Button(0, 0, 100, 50, (255, 0, 0), _("Back"), go_to_distance_selection)
+        back_button = graphics_elements.Button(30, 30, 180, 40, (255, 0, 0), _("Back"), go_to_distance_selection)
         Gui.buttons.append(back_button)
 
         #betting texts
@@ -185,13 +188,13 @@ class GameManager:
                 True,
                 pygame.Color("black")
             )
-            racer_name_text_pos = (50 + i * 250, 50)
+            racer_name_text_pos = (50 + i * 250, 90)
             screen.blit(racer_name_text, racer_name_text_pos)
 
         #display racers
         if not GameManager.racers_showcase.sprites():
             for i in range(5):
-                racer = Racer(50 + i * 250, 50, CoreGame.charset, i)
+                racer = Racer(50 + i * 250, 100, CoreGame.charset, i)
                 racer.add(GameManager.racers_showcase)
         else:
             for racer in GameManager.racers_showcase:
@@ -218,11 +221,10 @@ class GameManager:
         if not BotManager.bots:
             BotManager.add_bots(random.randint(1, 4))
 
-        if not Gui.infoboxes:
-            for i in range(5):
-                racer = GameManager.racers.sprites()[i]
-                bet_amount_for_racer_infobox = graphics_elements.InfoBox(50 + i * 250, 200, 200, 150, _("Other gamblers have bet \n ${} on this racer.").format(racer.get_total_money_bet()))
-                Gui.infoboxes.append(bet_amount_for_racer_infobox)
+        for i in range(5):
+            racer = GameManager.racers.sprites()[i]
+            bet_amount_for_racer_infobox = graphics_elements.InfoBox(50 + i * 250, 250, 200, 90, _("Other gamblers have bet \n ${} on this racer.").format(racer.get_total_money_bet()))
+            Gui.infoboxes.append(bet_amount_for_racer_infobox)
 
         GameManager.player_money_original = GameManager.player.money
 
@@ -536,9 +538,6 @@ class Gui:
                     mouse_pos = event.pos          
                     if button.rect.collidepoint(mouse_pos):
                         button.click()
-                        #minigame button, on minigame finished we will add the money to the player
-                        if button.text == 'Minigame':
-                            GameManager.player.money += button.action_return_value
 
     def delete_button(button):
         Gui.buttons.remove(button)

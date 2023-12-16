@@ -7,10 +7,15 @@ import graphics_elements as ge
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
+#player data
+username = None
+money = 300
+language = 'English'
+winrate = 0
+
 # Race setup variable
 background_setup = None
 character_setup = None
-money = 300
 
 #back button shananigans
 go_to_distance_selection = False

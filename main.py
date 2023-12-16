@@ -6,7 +6,6 @@ import constants as c
 from menu import menu
 from Login import Logingin
 
-
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
 pygame.display.set_caption("Racing")

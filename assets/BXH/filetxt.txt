@@ -1,8 +1,9 @@
 LEADERBOARD
-1 lmao
+4 Racer 1
 
 2 Racer 4
-3 Racer 1
-4 Racer 5
-5 Racer 3
+3 Racer 3
+4 Racer 2
+
+5 Racer 5
 

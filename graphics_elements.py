@@ -1,5 +1,7 @@
 import pygame
 import utils
+# Global variable to track if hover sound has been played
+global hover_sound_played
 
 class Button(pygame.sprite.Sprite):
     button_sprites = [pygame.image.load(f"./Assets/UI/Button/UI_Flat_Button_Large_Lock_01a{i}.png") for i in range(1, 5)]
@@ -20,6 +22,9 @@ class Button(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+        self.played_hover_sound = False
+        self.played_click_sound = False
+
         self.font = pygame.font.SysFont("Constantia", 20)
         self.text_surface = self.font.render(self.text, True, (0, 0, 0))
         self.text_rect = self.text_surface.get_rect()
@@ -31,14 +36,15 @@ class Button(pygame.sprite.Sprite):
         self.action_return_value = None
 
     def update_image(self):
-        #if mouse is hovered over button, change image
-        if self.rect.collidepoint(pygame.mouse.get_pos()):
-            if (pygame.mouse.get_pressed()[0]):
+        global hover_sound_played
+        is_hovering = self.rect.collidepoint(pygame.mouse.get_pos())
+        if is_hovering:
+            if pygame.mouse.get_pressed()[0]:
                 self.image = self.click_image
             else:
                 self.image = self.hover_image
         else:
-            self.image = self.normal_image
+            hover_sound_played = False
 
         self.font = pygame.font.SysFont("Constantia", 20)
         self.text_surface = self.font.render(self.text, True, (0, 0, 0))
@@ -70,6 +76,23 @@ class InfoBox(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
         utils.renderTextCenteredAt(self.text, self.font, pygame.Color("white"), self.center_x[0], self.center_x[1], screen, self.width-self.padding*2)
+class Title:
+    def __init__(self, x, y, width, height, text):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+        self.image = pygame.transform.scale(pygame.image.load('./assets/Menu_Background/title_frame0.png'), (self.width, self.height))
+        self.font = pygame.font.SysFont("Constantia", 35)
+        self.text = text
+        self.center_x = (self.x + self.width // 2, self.y + self.height // 2)
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
+        #utils.renderTextCenteredAt(self.text, self.font, pygame.Color("black"), self.center_x[0], self.y, screen, self.width)
+        text_surface = self.font.render(self.text, True, pygame.Color("black"))
+        screen.blit(text_surface, (self.center_x[0] - text_surface.get_width() // 2, self.y + self.height // 4))
 
 class Background():
     def __init__(self, name, width, height, image, first_lane_y_pos, start_point, end_point):

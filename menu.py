@@ -166,7 +166,7 @@ def environment_display():
     draw_rect(29,140,388,218.25,3,(0,0,0),22.5,'')
     draw_rect(446,140,388,218.25,6,(0,0,0),22.5,'')
     draw_rect(863,140,388,218.25,9,(0,0,0),22.5,'')
-    draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[22])   
+    draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[22])     
     if back.draw_button():
         ev=''
         menu_active=True
