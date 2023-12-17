@@ -169,6 +169,7 @@ def environment_display():
     draw_rect(446,140,388,218.25,6,(0,0,0),22.5,'')
     draw_rect(863,140,388,218.25,9,(0,0,0),22.5,'')
     draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[22])     
+    draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[22])     
     if back.draw_button():
         ev=''
         menu_active=True
@@ -487,6 +488,11 @@ def setting_language():
             lg_count=0
             switch_lg(lg_list)
             switch_lg(info)
+            for i in range(151,159,1):
+                if i%2!=0:
+                    b=image_list[i]
+                    image_list[i]=image_list[i+1]
+                    image_list[i+1]=b
             switch_language=False
     if switch_resolution:
         new_choice=button(532,500,250,40,1,5,rs_list[1])
@@ -500,11 +506,15 @@ def setting_language():
             switch_resolution=False
 def shop_display():
     global menu_active, shop_button_active, buff_choice, buff, get_money, selected_buff
-    buff_1=round_button(172,280,140,30,'Buff 1')
-    buff_2=round_button(484,280,140,30,'Buff 2')
-    buff_3=round_button(796,280,140,30,'Buff 3')
-    buff_4=round_button(1108,280,140,30,'Buff 4')
+    buff_1=button(40,140,270,270,140,5,'')
+    buff_2=button(350,140,270,270,143,5,'')
+    buff_3=button(660,140,270,270,146,5,'')
+    buff_4=button(970,140,270,270,149,5,'')
     back=button(30,30,180,40,1,2.5,lg_list[14])
+    draw_rect(40,440,270,250,151,(0,0,0),22.5,'')
+    draw_rect(350,440,270,250,153,(0,0,0),22.5,'')
+    draw_rect(660,440,270,250,155,(0,0,0),22.5,'')
+    draw_rect(970,440,270,250,157,(0,0,0),22.5,'')
     draw_rect(315,30,650,80,111,(0,0,0),22.5,lg_list[66])
     money_text=font.render(f'${c.money}',True,"yellow")
     money_text_rect=money_text.get_rect(center=(1180,47.5))
@@ -531,31 +541,29 @@ def shop_display():
         buff=4
         selected_buff = 0b0001
 def buff_choosing():
-    global buff_choice, buff_info, buff, shop_button_active, get_money, minigame_active, actual_buff, selected_buff
-    buy=button(295,600,180,40,1,2.5,lg_list[68])
-    cancel=button(505,600,180,40,1,2.5,lg_list[44])
-    more_info=button(715,600,270,40,1,2.5,lg_list[46])
+    global buff_choice, buff_info, buff, shop_button_active, get_money, minigame_active, actual_buff, selected_buff, chose_buff
+    buy=button(400,600,180,40,1,2.5,lg_list[68])
+    cancel=button(700,600,180,40,1,2.5,lg_list[44])
     if buff_choice:
-        a=['First','Second','Third', 'Fourth']
-        draw_rect(215,450,850,240,113,(0,0,0),30,lg_list[70].replace('\n',str(buff)))
+        draw_rect(215,450,850,240,113,(0,0,0),30,lg_list[70].replace('\n',lg_list[130+2*(buff-1)]))
         if buy.draw_button():
             if c.money<100:               
                 buff=0
                 get_money=True
                 buff_choice=False          
+            elif c.selected_buff & selected_buff == selected_buff:
+                chose_buff=True
+                buff_choice=False  
             else:
                 c.money-=100
                 c.selected_buff |= selected_buff
                 print("selected buffs:", c.selected_buff)
+                print(c.selected_buff)
                 buff_choice=False
             
         if cancel.draw_button():
             buff_choice=False
             buff=0
-        if more_info.draw_button():
-            buff_info=True
-            shop_button_active=False
-            buff_choice=False
     if get_money:
         draw_rect(140,450,1000,240,113,(0,0,0),30,lg_list[72])
         minigame=button(290,600,300,40,1,2.5,lg_list[74])
@@ -567,16 +575,13 @@ def buff_choosing():
         if cancel.draw_button():
             get_money=False
             shop_button_active=True
-def buff_information():
-    global shop_button_active, buff_info, buff
-    back=button(30,30,180,40,1,2.5,lg_list[14])
-    screen.fill(255)
-    if back.draw_button():
-        shop_button_active=True
-        buff_info=False
-    inf=font.render((info[100+2*(buff-1)]),True, "black")
-    inf_rect=inf.get_rect(center=(640,320))
-    screen.blit(inf, inf_rect)
+    if chose_buff:
+        draw_rect(240,450,800,240,113,(0,0,0),30,lg_list[128])
+        ok=button(540,600,200,40,1,2.5,'OK')
+        if ok.draw_button():
+            chose_buff=False
+            shop_button_active=True
+
 def minigame_display():
     global menu_active, minigame_active, font
     if minigame_active:
@@ -680,8 +685,6 @@ def menu():
         elif shop_button_active:
             shop_display()
             buff_choosing()
-        elif buff_info:
-            buff_information()
         elif minigame_active:
             minigame_display()
         pygame.display.update()
