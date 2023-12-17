@@ -70,45 +70,7 @@ class button():
         text_len=text_img.get_width()
         screen.blit(text_img,(self.x+int(self.width/2)-int(text_len/2),self.y+self.text_dis))
         return action
-class round_button():
-    button_col=(25,190,220)
-    hover_col=(75,225,225)
-    click_col=(50,150,255)
-    text_col=(255,255,255)
-    r=70
-    def __init__(self,x,y,radius,text_dis,text):
-        self.x=x
-        self.y=y
-        self.radius=radius
-        self.text_dis=text_dis
-        self.text=text
-    def draw_button(self):
-        global clicked
-        action=False
-        #Lấy vị trí trỏ chuột
-        pos=pygame.mouse.get_pos()
-        #Tạo rect cho nút
-        button_surface=pygame.Surface((3.0*self.r, 3.0*self.r))
-        button_rect=button_surface.get_rect(center=(self.x, self.y))
-        #Kiểm tra điều kiện nhấn chuột
-        if button_rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0]==1:
-                clicked=True
-                pygame.draw.circle(screen,self.click_col,(self.x, self.y),self.radius)
-            elif pygame.mouse.get_pressed()[0]==0 and clicked==True:
-                clicked=False
-                action=True
-            else:
-                pygame.draw.circle(screen,self.hover_col,(self.x, self.y),self.radius)
-        else:
-            pygame.draw.circle(screen,self.button_col,(self.x, self.y),self.radius)
-        #Thêm viền cho nút
-        pygame.draw.circle(screen,"white",(self.x, self.y),self.radius,3)
-        #Thêm chữ cho nút
-        text_img=font.render(self.text,True,self.text_col)
-        text_len=text_img.get_width()
-        screen.blit(text_img,(self.x-int(text_len/2),self.y-4*self.text_dis))
-        return action
+
 #Các hàm
 
 def game_name():
@@ -519,7 +481,7 @@ def setting_language():
                 pygame.display.set_mode((1280,720))
             switch_resolution=False
 def shop_display():
-    global menu_active, shop_button_active, buff_choice, buff, get_money, selected_buff
+    global menu_active, shop_button_active, buff_choice, buff, get_money, selected_buff, chose_buff
     buff_1=button(40,140,270,270,140,5,'')
     buff_2=button(350,140,270,270,143,5,'')
     buff_3=button(660,140,270,270,146,5,'')
@@ -545,6 +507,7 @@ def shop_display():
         shop_button_active=False
         buff_choice=False
         get_money=False
+        chose_buff=False
     if buff_1.draw_button():
         buff_choice=True
         buff=1
