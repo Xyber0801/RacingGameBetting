@@ -507,11 +507,6 @@ def setting_language():
             lg_count=0
             switch_lg(lg_list)
             switch_lg(info)
-            for i in range(151,159,1):
-                if i%2!=0:
-                    b=image_list[i]
-                    image_list[i]=image_list[i+1]
-                    image_list[i+1]=b
             switch_language=False
     if switch_resolution:
         new_choice=button(532,500,250,40,1,5,rs_list[1])
