@@ -13,7 +13,7 @@ BG_IMG = pygame.transform.scale2x(pygame.image.load("./Assets/Minigame/bg.png"))
 
 STAT_FONT = pygame.font.SysFont("comicsans", 50)
 
-class Minigame:
+class Flappybird:
     @staticmethod
     def start():
         win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))

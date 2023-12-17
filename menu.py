@@ -3,7 +3,7 @@ import pygame, sys
 from pygame.locals import *
 import constants as c
 from DinoGame import Dino_game
-from minigame import Minigame
+from flappybird import Flappybird
 from car_game import Car_Game
 from snake_game import Snake_game
 from game_text_sources import *
@@ -611,7 +611,7 @@ def minigame_display():
             else:
                 pygame.display.set_mode((1280,720), FULLSCREEN)
         if minigame2.draw_button():
-            c.money+=int(Minigame.start())
+            c.money+=int(Flappybird.start())
             if rs_list[0]=='1280x720':
                 pygame.display.set_mode((1280,720))
             else:
