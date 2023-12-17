@@ -15,7 +15,7 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 import os.path #image
 
 import constants as c
-
+from Login import SaveGame
 
 SCREEN = pygame.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
 
@@ -67,6 +67,7 @@ def filetxt(): #chuyển file screen
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONUP:
@@ -204,6 +205,7 @@ def main_BXH(finished_racers): #main BXH screen
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONUP:

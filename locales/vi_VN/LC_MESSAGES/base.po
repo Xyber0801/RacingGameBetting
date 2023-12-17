@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-12-14 22:14+0700\n"
-"PO-Revision-Date: 2023-12-14 22:15+0700\n"
+"PO-Revision-Date: 2023-12-16 21:32+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -19,7 +19,7 @@ msgstr "Đổi tên thành:"
 
 #: coregame.py:156
 msgid "Back"
-msgstr "Trở lại"
+msgstr "Quay lại"
 
 #: coregame.py:160
 msgid "Bet Amount: ${}"

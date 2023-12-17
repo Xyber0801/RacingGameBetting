@@ -7,11 +7,13 @@ import graphics_elements as ge
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
-#player data
-username = None
-money = 300
-language = 'English'
+#player data (data here is arbitrary)
+username = ''
+money = 0
+language = 'en'
 winrate = 0
+total_games = 0
+won_games = total_games * winrate
 
 # Race setup variable
 background_setup = None
