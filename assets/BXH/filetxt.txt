@@ -1,9 +1,9 @@
 LEADERBOARD
-1 ghijgigh
-2 Racer 2
+1 Racer 2
+
+2 \Racer 1
 3 Racer 4
+4 Racer 3
 
-4 Racer 5
-
-5 Racer 1
+5 Racer 5
 
