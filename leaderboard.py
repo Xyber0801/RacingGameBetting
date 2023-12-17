@@ -16,6 +16,7 @@ import os.path #image
 
 import constants as c
 from Login import SaveGame
+import game_text_sources as gts
 
 SCREEN = pygame.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
 
@@ -24,6 +25,9 @@ Ldb = pygame.image.load('./assets/BXH/leaderboard00.png')
 Ldb = pygame.transform.scale(Ldb,(361,494))
 
 brown_color  = pygame.Color(153, 82, 26)
+yellow_color = pygame.Color(255, 255, 0)
+
+global _
 
 def filetxt(): #chuyển file screen
     pygame.display.set_caption("File text")
@@ -67,7 +71,7 @@ def filetxt(): #chuyển file screen
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
+                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, gts.history_list, c.username)
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONUP:
@@ -161,7 +165,7 @@ def filetxt(): #chuyển file screen
 #         pygame.display.update()
 
 
-def main_BXH(finished_racers): #main BXH screen
+def main_BXH(finished_racers, player_racer): #main BXH screen
     pygame.display.set_caption("BXH")
 
     pygame.mixer.stop()
@@ -194,7 +198,10 @@ def main_BXH(finished_racers): #main BXH screen
         #leaderboard text
         for i in range(5):
             racer = finished_racers.sprites()[i]
-            racer_text = pygame.font.SysFont('cambria', 40).render(f"{racer.name}", True, brown_color)
+            if racer == player_racer:
+                racer_text = pygame.font.SysFont('cambria', 40).render(f"{racer.name}", True, yellow_color)
+            else:
+                racer_text = pygame.font.SysFont('cambria', 40).render(f"{racer.name}", True, brown_color)
             SCREEN.blit(racer_text, (580, 200 + i * 75))
 
         #đổi màu button khi trỏ chuột
@@ -205,7 +212,7 @@ def main_BXH(finished_racers): #main BXH screen
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
+                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, gts.history_list, c.username)
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONUP:
@@ -213,18 +220,14 @@ def main_BXH(finished_racers): #main BXH screen
                     running = False
 
                 if Screenshot_button.checkForInput(BXH_MOUSE_POS):
-                    #lấy tọa độ và chụp màn hình
-                    #picture = pyautogui.screenshot(region=(rect.left + 10,rect.top + 35,1000,672))
-                    #picture.save('./assets/BXH/screenshot.png')
                     pygame.image.save(SCREEN, './assets/BXH/screenshot.png')
                     
-                        #HIỂN THỊ ẢNH VỪA CHỤP
+                    #HIỂN THỊ ẢNH VỪA CHỤP
                     #pc = cv2.imread('C:\\Users\\ASUS\\OneDrive\\Desktop\\DL BXH\\BXH\\screenshot.png')
                     #cv2.imshow("SAVED SCREEN IMAGES", pc)
                     #cv2.waitKey()
                     
-
-                    #LƯU ẢNH VỪA CHỤP (BẮT BUỘC)
+                    #LƯU ẢNH VỪA CHỤP
                     # Load image
                     pct = pygame.image.load("./assets/BXH/screenshot.png")
                     # Show save dialog

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-12-14 22:14+0700\n"
-"PO-Revision-Date: 2023-12-16 21:32+0700\n"
+"POT-Creation-Date: 2023-12-17 15:15+0700\n"
+"PO-Revision-Date: 2023-12-17 15:16+0700\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: vi\n"
@@ -13,56 +13,82 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: coregame.py:142
+#: coregame.py:141
 msgid "Rename to:"
 msgstr "Đổi tên thành:"
 
-#: coregame.py:156
+#: coregame.py:148
+msgid "Betting Screen"
+msgstr "Màn hình đặt cược"
+
+#: coregame.py:158
 msgid "Back"
 msgstr "Quay lại"
 
-#: coregame.py:160
+#: coregame.py:162
 msgid "Bet Amount: ${}"
 msgstr "Số tiền đặt cược: ${}"
 
-#: coregame.py:164
+#: coregame.py:166
 msgid "Bet on racer: {}"
 msgstr "Đặt cược trên tay đua: {}"
 
-#: coregame.py:164
+#: coregame.py:166
 msgid "Not selected yet"
 msgstr "Chưa được chọn"
 
-#: coregame.py:171 coregame.py:248 coregame.py:271 coregame.py:293
+#: coregame.py:173 coregame.py:258 coregame.py:309
 msgid "Player's Money: ${}"
 msgstr "Số tiền của người chơi: ${}"
 
-#: coregame.py:203
+#: coregame.py:205
 msgid "Bet on {}"
 msgstr "Đặt cược vào {}"
 
-#: coregame.py:207
+#: coregame.py:209
 msgid "Rename {}"
 msgstr "Đổi tên {}"
 
-#: coregame.py:224
+#: coregame.py:225
 msgid ""
 "Other gamblers have bet \n"
 " ${} on this racer."
 msgstr "Những người chơi khác đã đặt cược ${} trên tay đua này."
 
-#: coregame.py:230
+#: coregame.py:231
 msgid "Start"
 msgstr "Bắt đầu"
 
-#: coregame.py:296
-msgid "You don't have enough money to bet, play a minigame to get more money"
-msgstr "Bạn không còn đủ tiền để đặt cược, hãy chơi minigame để nhận thêm tiền"
+#: coregame.py:271
+msgid "Buff applied:"
+msgstr "Tăng cường hiện có:"
 
-#: coregame.py:300
-msgid "Minigame"
-msgstr "Minigame"
+#: coregame.py:276
+msgid "None"
+msgstr "Không có"
 
-#: menu.py:116
+#: coregame.py:281
+#, python-format
+msgid "{}% speed buff"
+msgstr "{}% tăng tốc"
+
+#: coregame.py:284
+msgid "100px headstart"
+msgstr "Khởi đầu trước 100px"
+
+#: coregame.py:287
+msgid "can negate first bad spell"
+msgstr "Có thể vô hiệu hoá bùa hại đầu tiên"
+
+#: menu.py:117
 msgid "./Assets/Menu_Background/title_en.png"
 msgstr "./Assets/Menu_Background/title.png"
+
+#~ msgid "You don't have enough money to bet, play a minigame to get more money"
+#~ msgstr "Bạn không còn đủ tiền để đặt cược, hãy chơi minigame để nhận thêm tiền"
+
+#~ msgid "Minigame"
+#~ msgstr "Minigame"
+
+#~ msgid "{} (You)"
+#~ msgstr "{} (Bạn)"

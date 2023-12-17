@@ -10,6 +10,9 @@ from email.mime.multipart import MIMEMultipart
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 
+import game_text_sources as gts
+import ast
+
 
 gc = gspread.service_account("./assets/api_key/creeee.json")
 
@@ -27,7 +30,7 @@ LANGUAGE_COLUMN = 6
 BUFF_COLUMN = 7
 WINRATE_COLUMN = 8
 TOTAL_GAME_COLUMN = 9
-
+HISTORY_COLUMN = 10
 
 #Hàm lưu dữ liệu
 def Save (row, column, Svalue):
@@ -35,12 +38,13 @@ def Save (row, column, Svalue):
 
 #Hàm lấy dữ liệu FaceID từ database
 def LoadFaceID(Fpassword):
-    Fpassword = str(Fpassword).replace("[", "")
-    Fpassword = Fpassword.replace("]", "")
-    temp =  Fpassword.split()
-    for i in range(128):
-        temp[i] = np.float64(temp[i])
-    return np.array(temp, dtype=float)
+    # Fpassword = str(Fpassword).replace("[", "")
+    # Fpassword = Fpassword.replace("]", "")
+    # temp =  Fpassword.split()
+    # for i in range(128):
+    #     temp[i] = np.float64(temp[i])
+    # return np.array(temp, dtype=float)
+    return np.fromstring(Fpassword[1:-1], dtype=float, sep=' ')
 
 #Hàm bảo mật
 def Secure(password):
@@ -53,6 +57,10 @@ def Secure(password):
 
 #Hàm đăng nhập
 def Logingin():
+    '''
+    returns true if the user logins successfully
+    returns false if the user exits the login screen
+    '''
     layout = [
         [
             sg.Text ("Username"),
@@ -101,10 +109,8 @@ def Logingin():
             else:
                 window["confirm"].update("Success")
                 # Get data from database
-                c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username = LoadData(c.money, c.language, c.selected_buff, c.winrate, c.total_games, values["username"])
+                c.money, c.language, c.selected_buff, c.winrate, c.total_games, gts.history_list, c.username = LoadData(values["username"])
                 c.won_games = int(c.winrate * c.total_games)
-                print(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
-
                 running = False
                 window.close()
                 return True
@@ -189,7 +195,7 @@ def Registerin():
                         worksheet.update_cell(row, EMAIL_COLUMN, str(values["email"]))
                         worksheet.update_cell(row, USERNAME_COLUMN, str(values["username"]))
                         worksheet.update_cell(row, PASSWORD_COLUMN, str(values["password"]))
-                        SaveGame(300, 'English', 0, 0, 0, unhashed_username)
+                        SaveGame(300, 'English', 0, 0, 0, [], unhashed_username)
 
                         sg.popup("Saved")
                         running = False
@@ -324,14 +330,14 @@ def FaceIDRegisterin():
             if soldier == 0:
                 worksheet.update_cell(row, USERNAME_COLUMN, Secure(values["username"]))
                 worksheet.update_cell(row, FACE_ID_COLUMN, inputedPic_encoding)
-                SaveGame(100, "English", 0, 0, 0, values["username"])
+                SaveGame(300, 'English', 0, 0, 0, [], values["username"])
                 sg.popup("Saved")
                 running = False
                 window.close()
                 break
 
 #Hàm lưu dữ liệu khi tắt game
-def SaveGame (MoneyV, LanguageV, BuffV, WinrateV, TotalGameV, Username):
+def SaveGame (MoneyV, LanguageV, BuffV, WinrateV, TotalGameV, History, Username):
     Row = 1
     usname = worksheet.cell(Row, USERNAME_COLUMN).value
     while usname != None:
@@ -342,13 +348,14 @@ def SaveGame (MoneyV, LanguageV, BuffV, WinrateV, TotalGameV, Username):
             Save(Row, BUFF_COLUMN, BuffV)
             Save(Row, WINRATE_COLUMN, WinrateV)
             Save(Row, TOTAL_GAME_COLUMN, TotalGameV)
+            Save(Row, HISTORY_COLUMN, str(History))
             break
         else:
             Row = Row + 1
             usname = worksheet.cell(Row, USERNAME_COLUMN).value
 
 #Hàm lấy dữ liệu khi khởi động game
-def LoadData (money, language, selected_buff, winrate, total_games, Usname):
+def LoadData (Usname):
     Row = 1
     usname = worksheet.cell(Row, USERNAME_COLUMN).value
     while usname != None:
@@ -358,7 +365,14 @@ def LoadData (money, language, selected_buff, winrate, total_games, Usname):
             selected_buff = worksheet.cell(Row, BUFF_COLUMN).value
             winrate = worksheet.cell(Row, WINRATE_COLUMN).value
             total_games = worksheet.cell(Row, TOTAL_GAME_COLUMN).value
-            return (int(money), language, int(selected_buff), float(winrate.replace(',','.')), int(total_games), Usname)
+
+            if len(worksheet.cell(Row, HISTORY_COLUMN).value) <= 2:
+                history_list = []
+            else:
+                str_list = worksheet.cell(Row, HISTORY_COLUMN).value
+                history_list = ast.literal_eval(str_list)  # This will convert the string to a list
+
+            return (int(money), language, int(selected_buff), float(winrate.replace(',','.')), int(total_games), history_list, Usname)
         else:
             Row = Row + 1
             usname = worksheet.cell(Row, USERNAME_COLUMN).value

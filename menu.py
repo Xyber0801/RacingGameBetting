@@ -7,6 +7,7 @@ from minigame import Minigame
 from car_game import Car_Game
 from snake_game import Snake_game
 from game_text_sources import *
+import game_text_sources as gts
 from Login import SaveGame
 
 from i18n import I18N
@@ -149,7 +150,7 @@ def menu_display():
         menu_active=False
         setting_button_active=True
     if quit.draw_button():
-        SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
+        SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, gts.history_list, c.username)
         pygame.quit()
         sys.exit()
     if shop.draw_button():
@@ -398,6 +399,7 @@ def history_display():
     draw_rect(240,225,800,460,129,(0,0,0),5,'')
     screen.blit(winrate_text, winrate_text_rect)
     screen.blit(game_played_text, game_played_text_rect)  
+
     if back.draw_button():
         menu_active=True
         history_button_active=False
@@ -411,13 +413,13 @@ def history_display():
     if next.draw_button():
         u+=6
         v+=6
-        if v>=len(history_list):         
-            v=len(history_list)
-        if u>=len(history_list) - 6:
-            u=len(history_list) - 6
-    if len(history_list)!=0:
+        if v>=len(gts.history_list):         
+            v=len(gts.history_list)
+        if u>=len(gts.history_list) - 6:
+            u=len(gts.history_list) - 6
+    if len(gts.history_list)!=0:
         for i in range(u,v,1):
-            txt_surface = font.render(lg_list[92+2*(i%6)].replace('\n',str(history_list[i])), True, (255,255,255))
+            txt_surface = font.render(lg_list[92+2*(i%6)].replace('\n',str(gts.history_list[i])), True, (255,255,255))
             txt_surface_rect=txt_surface.get_rect(midtop=(640, 250 + (i%6)*(75)))
             screen.blit(txt_surface, txt_surface_rect)
     #Hàm cài đặt trong trò chơi
@@ -511,11 +513,18 @@ def shop_display():
     buff_3=button(660,140,270,270,146,5,'')
     buff_4=button(970,140,270,270,149,5,'')
     back=button(30,30,180,40,1,2.5,lg_list[14])
-    draw_rect(40,440,270,250,151,(0,0,0),22.5,'')
-    draw_rect(350,440,270,250,153,(0,0,0),22.5,'')
-    draw_rect(660,440,270,250,155,(0,0,0),22.5,'')
-    draw_rect(970,440,270,250,157,(0,0,0),22.5,'')
-    draw_rect(315,30,650,80,111,(0,0,0),22.5,lg_list[66])
+    if lg_list[0]=='English':
+        draw_rect(40,440,270,250,151,(0,0,0),22.5,'')
+        draw_rect(350,440,270,250,153,(0,0,0),22.5,'')
+        draw_rect(660,440,270,250,155,(0,0,0),22.5,'')
+        draw_rect(970,440,270,250,157,(0,0,0),22.5,'')
+        draw_rect(315,30,650,80,111,(0,0,0),22.5,lg_list[66])
+    else:
+        draw_rect(40,440,270,250,152,(0,0,0),22.5,'')
+        draw_rect(350,440,270,250,154,(0,0,0),22.5,'')
+        draw_rect(660,440,270,250,156,(0,0,0),22.5,'')
+        draw_rect(970,440,270,250,158,(0,0,0),22.5,'')
+        draw_rect(315,30,650,80,111,(0,0,0),22.5,lg_list[68])
     money_text=font.render(f'${c.money}',True,"yellow")
     money_text_rect=money_text.get_rect(center=(1180,47.5))
     screen.blit(money_text,money_text_rect)
@@ -557,8 +566,6 @@ def buff_choosing():
             else:
                 c.money-=100
                 c.selected_buff |= selected_buff
-                print("selected buffs:", c.selected_buff)
-                print(c.selected_buff)
                 buff_choice=False
             
         if cancel.draw_button():
@@ -641,23 +648,22 @@ def menu():
     menu_active = True
 
     # set language
-    if c.language != "English":
+    if c.language != lg_list[0]:
         switch_lg(lg_list)
         switch_lg(info)
-        locale = 'vi_VN'
-    else:
-        locale = 'en_US'
+    locale = 'en_US' if lg_list[0] == "English" else 'vi_VN'
     I18N.change_locale(locale)
 
     if c.go_to_distance_selection:
         go_to_distance_selection()
     pygame.mixer_music.load(r".\assets\music\menu_music.mp3")
     pygame.mixer_music.play(-1, fade_ms=1500)
+
     while menu_running:
         clock.tick(60)       
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
+                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, gts.history_list, c.username)
                 pygame.quit()
                 sys.exit()
         screen.blit(bg,(0,0))

@@ -2,7 +2,6 @@ import pygame
 import datetime
 import random
 import math
-from minigame import Minigame
 import graphics_elements
 import constants as c
 import game_text_sources as gts
@@ -58,15 +57,13 @@ class CoreGame:
                 GameManager.racing_screen(dt, current_time, CoreGame.screen)
             elif GameManager.state == 'postgame':
                 GameManager.postgame(CoreGame.screen)
-            elif GameManager.state == 'minigame':
-                GameManager.minigame(CoreGame.screen)
             
             GameManager.update(CoreGame.screen)
 
             for event in CoreGame.events:
                 if event.type == pygame.QUIT:
                     CoreGame.running = False
-                    SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
+                    SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, gts.history_list, c.username)
                     pygame.quit()
                     quit()
 
@@ -74,7 +71,7 @@ class CoreGame:
             dt = CoreGame.clock.tick(60) / 1000
 
 class GameManager:
-    # 4 states: 'betting', 'racing', 'postgame', 'minigame'
+    # 3 states: 'betting', 'racing', 'postgame'
     state = None
 
     player = None
@@ -225,7 +222,7 @@ class GameManager:
 
         for i in range(5):
             racer = GameManager.racers.sprites()[i]
-            bet_amount_for_racer_infobox = graphics_elements.InfoBox(50 + i * 250, 250, 200, 90, _("Other gamblers have bet \n ${} on this racer.").format(racer.get_total_money_bet()))
+            bet_amount_for_racer_infobox = graphics_elements.InfoBox(50 + i * 250, 240, 200, 100, _("Other gamblers have bet \n ${} on this racer.").format(racer.get_total_money_bet()))
             Gui.infoboxes.append(bet_amount_for_racer_infobox)
 
         GameManager.player_money_original = GameManager.player.money
@@ -234,6 +231,7 @@ class GameManager:
         start_button = graphics_elements.Button(900, 650, 200, 50, (255, 0, 0), _("Start"), GameManager.start_game)
         Gui.buttons.append(start_button)
 
+    @staticmethod
     def racing_screen(dt, current_time, screen):
         '''Displays and handles the racing screen'''
         Gui.reset_elements()
@@ -249,19 +247,46 @@ class GameManager:
         for racer in GameManager.racers:
             racer.draw_status_effect_sprite()
         
+        #texts
+        if (c.background_setup == c.forest_long or c.background_setup == c.forest_short or c.background_setup == c.forest_medium):
+            font_color = pygame.Color("white")
+        else:
+            font_color = pygame.Color("black")
         #display player's money
         font = pygame.font.SysFont("Constantia",32)
         player_money_text = font.render(
             _("Player's Money: ${}").format(GameManager.player.money),
             True,
-            pygame.Color("black")
+            font_color
         )
         player_money_text_pos = (0, 0)
         screen.blit(player_money_text, player_money_text_pos)
 
         if GameManager.check_end_game():
             GameManager.state = 'postgame'
-        
+
+        #applied buffs texts
+        font = pygame.font.SysFont("Constantia",16)
+        if BuffManager.buff_applied:
+            buff_applied_text = font.render(_("Buff applied:"), True, font_color)
+            buff_applied_text_pos = (1000, 10)
+            screen.blit(buff_applied_text, buff_applied_text_pos)
+            #text describing the buffs applied
+            if (c.selected_buff == 0):
+                no_buff_text = font.render(_("None"), True, font_color)
+                screen.blit(no_buff_text, (1000, 30))
+            else:
+                if (GameManager.player.bet_on_who.multiple_speed_modifier != 1):
+                    delta_speed = int((GameManager.player.bet_on_who.multiple_speed_modifier - 1) * 100)
+                    speed_buff_text = font.render(_("{}% speed buff").format(delta_speed), True, font_color)
+                    screen.blit(speed_buff_text, (1000, 30))
+                if (c.selected_buff & 0b0100 != 0):
+                    headstart_text = font.render(_("100px headstart"), True, font_color)
+                    screen.blit(headstart_text, (1000, 50))
+                if (c.selected_buff & 0b0010 != 0):
+                    negate_bad_spell_text = font.render(_("can negate first bad spell"), True, font_color)
+                    screen.blit(negate_bad_spell_text, (1000, 70))
+                
     def postgame(screen):
         '''Displays and handles the postgame screen'''
         Gui.reset_elements()
@@ -272,12 +297,18 @@ class GameManager:
             racer.update_image()
             screen.blit(racer.image, racer.rect)
 
+        #texts
+        if (c.background_setup == c.forest_long or c.background_setup == c.forest_short or c.background_setup == c.forest_medium):
+            font_color = pygame.Color("white")
+        else:
+            font_color = pygame.Color("black")
+
         #display player's money
         font = pygame.font.SysFont("Constantia",32)
         player_money_text = font.render(
             _("Player's Money: ${}").format(GameManager.player.money),
             True,
-            pygame.Color("black")
+            font_color
         )
         screen.blit(player_money_text, (0, 0))
 
@@ -286,26 +317,8 @@ class GameManager:
         GameManager.racers.draw(screen)
         #wait 1 sec
         pygame.time.wait(1500)
-        leaderboard.main_BXH(GameManager.finished_racers)
+        leaderboard.main_BXH(GameManager.finished_racers, GameManager.player.bet_on_who)
         GameManager.reset()
-        
-    def minigame(screen):
-        '''Displays and handles the minigame screen'''
-        Gui.reset_elements()
-        if GameManager.player.money >= 100:
-            GameManager.state = 'betting'
-            return
-        # Display player's money
-        font = pygame.font.SysFont("Constantia",32)
-        player_money_text = font.render(_("Player's Money: ${}").format(GameManager.player.money), True, pygame.Color("black"))
-        screen.blit(player_money_text, (400, 400))
-
-        text = font.render(_("You don't have enough money to bet, play a minigame to get more money"), True, pygame.Color("black"))
-        screen.blit(text, (100, 450))
-
-        # Minigame button
-        minigame_button = graphics_elements.Button(300, 650, 400, 50, (255, 0, 0), _("Minigame"), Minigame.start)
-        Gui.buttons.append(minigame_button)
 
     @staticmethod
     def start_game():
@@ -365,13 +378,13 @@ class GameManager:
             if GameManager.finished_racers.sprites()[0] == GameManager.player.bet_on_who:
                 c.won_games += 1
             c.winrate = c.won_games / c.total_games
-
-        print("winrate: ", c.winrate, "won games: ", c.won_games, "total games: ", c.total_games)
-        #update history list
-        if GameManager.finished_racers.sprites():
+            
+            #update history list
             delta_money = GameManager.player.money - GameManager.player_money_original
             c.money += delta_money
-            new_data =  [str(datetime.datetime.now().time()), GameManager.player.bet_on_who.name, GameManager.finished_racers.sprites().index(GameManager.player.bet_on_who) + 1, GameManager.player_bet_amount, 0 if delta_money < 0 else delta_money, 0 if delta_money > 0 else -delta_money]
+            now = datetime.datetime.now()
+            date_time = now.strftime("%d/%m/%Y %H:%M:%S")
+            new_data =  [date_time, GameManager.player.bet_on_who.name, GameManager.finished_racers.sprites().index(GameManager.player.bet_on_who) + 1, GameManager.player_bet_amount, 0 if delta_money < 0 else delta_money, 0 if delta_money > 0 else -delta_money]
             for data in new_data:   
                 gts.history_list.append(data)
 
@@ -518,11 +531,11 @@ class BuffManager():
         racer.can_negate_bad_spell = True
 
     def fast_or_slow(racer):
-        '''Increase or decrease the racer's speed by 10%'''
+        '''Increase or decrease the racer's speed by 20%'''
         if random.random() < 0.5:
-            racer.multiple_speed_modifier += 0.1
+            racer.multiple_speed_modifier += 0.2
         else:
-            racer.multiple_speed_modifier -= 0.1
+            racer.multiple_speed_modifier -= 0.2
             
 class Gui:
     buttons = []
