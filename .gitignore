@@ -1,3 +1,4 @@
-./__pycache__/
-./assets/BXH/filetxt.txt
-./assets/BXH/screenshot.png
+__pycache__/
+*.py[cod]
+assets/BXH/filetxt.txt
+assets/BXH/screenshot.png

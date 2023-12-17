@@ -26,6 +26,7 @@ MONEY_COLUMN = 5
 LANGUAGE_COLUMN = 6
 BUFF_COLUMN = 7
 WINRATE_COLUMN = 8
+TOTAL_GAME_COLUMN = 9
 
 
 #Hàm lưu dữ liệu
@@ -38,7 +39,6 @@ def LoadFaceID(Fpassword):
     Fpassword = Fpassword.replace("]", "")
     temp =  Fpassword.split()
     for i in range(128):
-        print(temp[i])
         temp[i] = np.float64(temp[i])
     return np.array(temp, dtype=float)
 
@@ -69,7 +69,7 @@ def Logingin():
             sg.Button("Face ID"),
         ],
         [
-            sg.Text("",key = "confirm")
+            sg.Text("", key = "confirm")
         ]
     ]
     window = sg.Window("Login", layout = layout)
@@ -85,8 +85,12 @@ def Logingin():
             psword = worksheet.cell(row, PASSWORD_COLUMN).value
             while usname != None:
                 if usname == Secure(values["username"]): 
-                    if CheckPassword(psword, values["password"]):
-                        soldier = 1   
+                    if psword != None:
+                        if CheckPassword(psword, values["password"]):
+                            soldier = 1   
+                            break
+                    else:
+                        sg.popup("You haven't created a password for this account, please try another way or register with password")
                         break
                 else:
                     row = row + 1
@@ -96,8 +100,11 @@ def Logingin():
                 window["confirm"].update("Fail")
             else:
                 window["confirm"].update("Success")
-                LoadData(c.money, c.language, c.selected_buff, c.winrate, values["username"])
-                print((c.money, c.language, c.selected_buff, c.winrate, values["username"]))
+                # Get data from database
+                c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username = LoadData(c.money, c.language, c.selected_buff, c.winrate, c.total_games, values["username"])
+                c.won_games = int(c.winrate * c.total_games)
+                print(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
+
                 running = False
                 window.close()
                 return True
@@ -174,6 +181,7 @@ def Registerin():
                     rannumber = random.randint(100000, 999999)
                     SendEmail(rannumber, values["email"])
                     if Verify(rannumber):
+                        unhashed_username = values["username"]
                         values["email"] = Secure(values["email"])
                         values["username"] = Secure(values["username"])
                         values["password"] = Secure(values["password"])
@@ -181,10 +189,9 @@ def Registerin():
                         worksheet.update_cell(row, EMAIL_COLUMN, str(values["email"]))
                         worksheet.update_cell(row, USERNAME_COLUMN, str(values["username"]))
                         worksheet.update_cell(row, PASSWORD_COLUMN, str(values["password"]))
+                        SaveGame(300, 'English', 0, 0, 0, unhashed_username)
+
                         sg.popup("Saved")
-
-                        SaveGame(300, 'English', 0, 0, values["username"])
-
                         running = False
                         window.close()
                         break
@@ -238,15 +245,19 @@ def FaceIDLogin():
             usname = worksheet.cell(row, USERNAME_COLUMN).value
             while usname != None:
                 if usname == Secure(values["username"]):
-                    psword = LoadFaceID(worksheet.cell(row, FACE_ID_COLUMN).value)
-                    if not(SamePic(psword, LoadFaceID(str(inputedPic_encoding)))):
-                        if CheckFaceID(psword, inputedPic_encoding):
-                            soldier = 1   
-                            break
+                    if worksheet.cell(row, FACE_ID_COLUMN).value != None:
+                        psword = LoadFaceID(worksheet.cell(row, FACE_ID_COLUMN).value)
+                        if not(SamePic(psword, LoadFaceID(str(inputedPic_encoding)))):
+                            if CheckFaceID(psword, inputedPic_encoding):
+                                soldier = 1   
+                                break
+                            else:
+                                break
                         else:
+                            window["confirm"].update("Please choose a photo different from the one used to register") 
                             break
                     else:
-                        window["confirm"].update("Please choose a photo different from the one used to register") 
+                        sg.popup("You haven't created a Face ID for this account, please try another way or register with Face ID")
                         break
                 else:
                     row = row + 1
@@ -313,36 +324,44 @@ def FaceIDRegisterin():
             if soldier == 0:
                 worksheet.update_cell(row, USERNAME_COLUMN, Secure(values["username"]))
                 worksheet.update_cell(row, FACE_ID_COLUMN, inputedPic_encoding)
+                SaveGame(100, "English", 0, 0, 0, values["username"])
                 sg.popup("Saved")
                 running = False
                 window.close()
                 break
 
 #Hàm lưu dữ liệu khi tắt game
-def SaveGame (MoneyV, LanguageV, BuffV, WinrateV, Username):
+def SaveGame (MoneyV, LanguageV, BuffV, WinrateV, TotalGameV, Username):
     Row = 1
     usname = worksheet.cell(Row, USERNAME_COLUMN).value
     while usname != None:
         if usname == Secure(Username):
+            print("saving game")
             Save(Row, MONEY_COLUMN, MoneyV)
             Save(Row, LANGUAGE_COLUMN, LanguageV)
             Save(Row, BUFF_COLUMN, BuffV)
             Save(Row, WINRATE_COLUMN, WinrateV)
+            Save(Row, TOTAL_GAME_COLUMN, TotalGameV)
+            break
         else:
             Row = Row + 1
+            usname = worksheet.cell(Row, USERNAME_COLUMN).value
 
 #Hàm lấy dữ liệu khi khởi động game
-def LoadData (M, L, B, W, Usname):
+def LoadData (money, language, selected_buff, winrate, total_games, Usname):
     Row = 1
     usname = worksheet.cell(Row, USERNAME_COLUMN).value
     while usname != None:
         if usname == Secure(Usname):
-            M = worksheet.cell(Row, MONEY_COLUMN).value
-            L = worksheet.cell(Row, LANGUAGE_COLUMN).value
-            B = worksheet.cell(Row, BUFF_COLUMN).value
-            W = worksheet.cell(Row, WINRATE_COLUMN).value
+            money = worksheet.cell(Row, MONEY_COLUMN).value
+            language = worksheet.cell(Row, LANGUAGE_COLUMN).value
+            selected_buff = worksheet.cell(Row, BUFF_COLUMN).value
+            winrate = worksheet.cell(Row, WINRATE_COLUMN).value
+            total_games = worksheet.cell(Row, TOTAL_GAME_COLUMN).value
+            return (int(money), language, int(selected_buff), float(winrate.replace(',','.')), int(total_games), Usname)
         else:
             Row = Row + 1
+            usname = worksheet.cell(Row, USERNAME_COLUMN).value
 
 def CheckPassword (SavedPassword, InputedPassword):
     if SavedPassword == Secure(InputedPassword):
@@ -429,11 +448,11 @@ def Verify(Vcode):
             running = False 
             window.close()
         if event == "Verify":
-            if values["verification code"] == str(Vcode):
+            if str(values["verification code"]).replace(' ', '') == str(Vcode):
                 window.close()
                 return True
             else:
-                window["announcment"].update("Please enter the correct verification code")
+                window["announcement"].update("Please enter the correct verification code")
 
 #Hàm check ảnh trùng
 def SamePic(Pic1, Pic2):

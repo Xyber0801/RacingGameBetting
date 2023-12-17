@@ -7,6 +7,7 @@ from minigame import Minigame
 from car_game import Car_Game
 from snake_game import Snake_game
 from game_text_sources import *
+from Login import SaveGame
 
 from i18n import I18N
 import gettext
@@ -148,6 +149,7 @@ def menu_display():
         menu_active=False
         setting_button_active=True
     if quit.draw_button():
+        SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
         pygame.quit()
         sys.exit()
     if shop.draw_button():
@@ -166,6 +168,7 @@ def environment_display():
     draw_rect(29,140,388,218.25,3,(0,0,0),22.5,'')
     draw_rect(446,140,388,218.25,6,(0,0,0),22.5,'')
     draw_rect(863,140,388,218.25,9,(0,0,0),22.5,'')
+    draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[22])     
     draw_rect(415,30,450,80,111,(0,0,0),22.5,lg_list[22])     
     if back.draw_button():
         ev=''
@@ -384,16 +387,10 @@ def history_display():
     back=button(30,30,180,40,1,2.5,lg_list[14])
     previous=button(30,320,180,40,1,2.5,lg_list[58])
     next=button(1070,320,180,40,1,2.5,lg_list[42])
-    winrate=0
-    if history_list:
-        for i in range(0,len(history_list),1):
-            if i%6==2:
-                if history_list[i]==1:
-                    winrate+=1
-        winrate=round(100*winrate/(len(history_list)//6),2)
+    winrate=round(100*c.winrate, 2)
     winrate_text = font.render(lg_list[88].replace('\n',str(winrate)), True, (255,255,255))
     winrate_text_rect = winrate_text.get_rect(midtop=(640,50))
-    game_played_text = font.render(lg_list[90].replace('\n',str(len(history_list)//6)), True, (255,255,255))
+    game_played_text = font.render(lg_list[90].replace('\n',str(c.total_games)), True, (255,255,255))
     game_played_text_rect = game_played_text.get_rect(midtop=(640,125))
     history_bg=pygame.image.load(image_list[116])
     screen.blit(history_bg,(0,0))
@@ -475,11 +472,13 @@ def setting_display():
 def switch_lg(list):
     locale = 'en_US' if lg_list[0] == "English" else 'vi_VN'
     I18N.change_locale(locale)
+    
     for i in range(0,len(list),1):
         if i%2==0:
             b=list[i]
             list[i]=list[i+1]
             list[i+1]=b
+    c.language = lg_list[0]
     return list
 def setting_language():
     global switch_language, lg_count, lg_list, switch_resolution, rs_count, info
@@ -528,19 +527,19 @@ def shop_display():
     if buff_1.draw_button():
         buff_choice=True
         buff=1
-        selected_buff = 0b0001
+        selected_buff = 0b1000
     if buff_2.draw_button():
         buff_choice=True
         buff=2
-        selected_buff = 0b0010
+        selected_buff = 0b0100
     if buff_3.draw_button():
         buff_choice=True
         buff=3
-        selected_buff = 0b0100
+        selected_buff = 0b0010
     if buff_4.draw_button():
         buff_choice=True
         buff=4
-        selected_buff = 0b1000
+        selected_buff = 0b0001
 def buff_choosing():
     global buff_choice, buff_info, buff, shop_button_active, get_money, minigame_active, actual_buff, selected_buff, chose_buff
     buy=button(400,600,180,40,1,2.5,lg_list[68])
@@ -558,6 +557,7 @@ def buff_choosing():
             else:
                 c.money-=100
                 c.selected_buff |= selected_buff
+                print("selected buffs:", c.selected_buff)
                 print(c.selected_buff)
                 buff_choice=False
             
@@ -640,7 +640,13 @@ def menu():
     menu_running=True
     menu_active = True
 
-    locale = 'en_US' if lg_list[0] == "English" else 'vi_VN'
+    # set language
+    if c.language != "English":
+        switch_lg(lg_list)
+        switch_lg(info)
+        locale = 'vi_VN'
+    else:
+        locale = 'en_US'
     I18N.change_locale(locale)
 
     if c.go_to_distance_selection:
@@ -651,6 +657,7 @@ def menu():
         clock.tick(60)       
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
                 pygame.quit()
                 sys.exit()
         screen.blit(bg,(0,0))

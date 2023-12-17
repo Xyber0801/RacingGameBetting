@@ -9,6 +9,7 @@ import game_text_sources as gts
 import leaderboard
 import pygame_textinput
 from i18n import I18N
+from Login import SaveGame
 global _
 
 class CoreGame:
@@ -65,6 +66,7 @@ class CoreGame:
             for event in CoreGame.events:
                 if event.type == pygame.QUIT:
                     CoreGame.running = False
+                    SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, c.username)
                     pygame.quit()
                     quit()
 
@@ -357,6 +359,14 @@ class GameManager:
         '''Reset the game'''
         print("reseting game")
 
+        #update constants
+        if (GameManager.finished_racers.sprites()):
+            c.total_games += 1
+            if GameManager.finished_racers.sprites()[0] == GameManager.player.bet_on_who:
+                c.won_games += 1
+            c.winrate = c.won_games / c.total_games
+
+        print("winrate: ", c.winrate, "won games: ", c.won_games, "total games: ", c.total_games)
         #update history list
         if GameManager.finished_racers.sprites():
             delta_money = GameManager.player.money - GameManager.player_money_original
@@ -472,6 +482,7 @@ class SpellManager:
     bad_spells = [slow, stun, turnaround, tp_start]
 
     def pick_random_spell():
+        #return random.choice(SpellManager.bad_spells)
         return random.choices(SpellManager.spell_effects, weights=SpellManager.spells_probability)[0]
 
 class BuffManager():
@@ -492,6 +503,7 @@ class BuffManager():
 
     def reset():
         BuffManager.buff_applied = False
+        c.selected_buff = 0b0000
 
     def speed_buff(racer):
         '''Increase racer's speed by 10%'''
@@ -630,6 +642,8 @@ class Racer(pygame.sprite.Sprite):
 
         #TODO: perk system
         #self.perk = perk
+        #scrapped the perk system, it's a shame
+
         # a list of (gambler, money_bet) tuples
         self.gambled_gamblers = []
 
