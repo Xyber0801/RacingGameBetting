@@ -177,7 +177,7 @@ class Car_Game():
                     vehicle.kill()
                     
                     # add to score
-                    score += 20
+                    score += 10
                     
                     # speed up the game after passing 5 vehicles
                     if score > 0 and score % 100 == 0:

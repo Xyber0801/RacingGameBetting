@@ -33,6 +33,7 @@ buff_choice=False #Chọn buff cần mua
 buff_info=False #Thông tin buff
 buff=0 #Chỉ số buff
 actual_buff=0 #Chỉ số buff đã mua
+chose_buff=False #Kích hoạt cửa sổ khi đã mua trùng buff
 get_money=False #Kích hoạt minigame khi không đủ tiền trong shop
 minigame_active=False #Kích hoạt minigame
 clicked=False #Biến nhấp chuột trong class button
@@ -100,6 +101,11 @@ lg_list=['English','Tiếng Việt', #0
          'Save image as (obligatory)', 'Lưu ảnh thành (bắt buộc)', #122
          'BACK', 'QUAY LẠI', #124
          'SAVE TO TEXT', 'LƯU THÀNH VĂN BẢN', #126
+         'You bought that buff!', 'Bạn đã mua bùa tăng cường đó rồi!', #128
+         'SPEED+PROMAX', 'TỐCĐỘ+PROMAX', #130
+         'Pay2Win', 'Nạp VIP', #132
+         'Cleanse', 'Thanh tẩy', #134
+         'Gambling Glory', 'Tài xỉu 88', #136
          ] 
 character_name=['PyBird','PyCat','PyDog','PyBear','PyFox','PyChibi Archer','PyChibi Enchantress','PyChibi Knight','PyChibi Swordsman',
                 'PyChibi Wizard','PyArcher','PyCommander','PyBlueKnight','PyRedKnight','PySamurai','PyKarasu Tengu','PyKitsune',
@@ -130,10 +136,6 @@ info=[r'.\Assets\Character_Info\animal\Bird\PyBird_Info0.png', r'.\Assets\Charac
       r'.\Assets\Character_Info\car\3\PyCarBinh_Info0.png', r'.\Assets\Character_Info\car\3\PyCarBinh_Info1.png', r'.\Assets\Character_Info\car\3\PyCarBinh_Info2.png', r'.\Assets\Character_Info\car\3\PyCarBinh_Info3.png',
       r'.\Assets\Character_Info\car\4\PyCarDanh_Info0.png', r'.\Assets\Character_Info\car\4\PyCarDanh_Info1.png', r'.\Assets\Character_Info\car\4\PyCarDanh_Info2.png', r'.\Assets\Character_Info\car\4\PyCarDanh_Info3.png',
       r'.\Assets\Character_Info\car\5\PyCarDuy_Info0.png', r'.\Assets\Character_Info\car\5\PyCarDuy_Info1.png', r'.\Assets\Character_Info\car\5\PyCarDuy_Info2.png', r'.\Assets\Character_Info\car\5\PyCarDuy_Info3.png',
-      'This is "SPEED+PROMAX", which grants your racer +10% speed! \n "Brought to you by Orange(TM)"', 'Đây là "TỐCĐỘPROMAX", thứ sẽ cho tay đua của bạn +10% tốc độ! \n "Được mang đến cho bạn bởi Orange(TM)"',
-      'This is "Pay2Win", which grants your racer a 100px headstart! \n "Worse than Free Fire" - Some racer', 'Đây là "Nạp VIP", thứ sẽ cho tay đua của bạn xuất phát trước 100px! \n "Rác hơn cả lửa chùa" - một tay đua cho biết',
-      'This is "Cleanse", which can help your character negate the first bad effect on the racetrack! \n "FAKER, WHAT WAS THAT!?"', 'Đây là "Thanh tẩy", thứ có thể giúp nhân vật của bạn phủ nhận hiệu ứng xấu đầu tiên trên đường đua! \n "FAKER, WHAT WAS THAT!?"',
-      'It is the "Gambling Glory", which can either -10% speed or +10% speed to your racer! \n "90% of gamblers quit before they hit a jackpot"', 'Đây là "Tài xỉu 88", thứ có thể làm giảm tốc độ -20% hoặc tăng tốc độ +20% cho tay đua của bạn! \n "90% người chơi tài xỉu bỏ cuộc trước khi họ thắng lớn"',
       ]
 history_text = ['Winrate: \n%', 'Number of games played: \n', 'Time played: \n', 'Bet Character: \n', 'Rank: \n', 'Money Bet: $\n', 'Winning Bet Money: $\n', 'Lost Bet Money: $\n']
 history_list = []
@@ -185,4 +187,12 @@ image_list=[r".\Assets\UI\Button\UI_Flat_Button_Large_Lock_01a1.png", r".\Assets
             r".\assets\Track_Distance\Short\forest_short.png", r".\assets\Track_Distance\Short\grassland_short.png", r".\assets\Track_Distance\Short\sunset_short.png", #130
             r".\assets\Track_Distance\Medium\forest_medium.png", r".\assets\Track_Distance\Medium\grassland_medium.png", r".\assets\Track_Distance\Medium\sunset_medium.png", #133
             r".\assets\Track_Distance\Long\forest_long.png", r".\assets\Track_Distance\Long\grassland_long.png", r".\assets\Track_Distance\Long\sunset_long.png", #136
+            r".\assets\buff_image\buff1\buff1_0.jpg", r".\assets\buff_image\buff1\buff1_1.jpg", r".\assets\buff_image\buff1\buff1_2.jpg", #140
+            r".\assets\buff_image\buff2\buff2_0.jpg", r".\assets\buff_image\buff2\buff2_1.jpg", r".\assets\buff_image\buff2\buff2_2.jpg", #143
+            r".\assets\buff_image\buff3\buff3_0.jpg", r".\assets\buff_image\buff3\buff3_1.jpg", r".\assets\buff_image\buff3\buff3_2.jpg", #146
+            r".\assets\buff_image\buff4\buff4_0.jpg", r".\assets\buff_image\buff4\buff4_1.jpg", r".\assets\buff_image\buff4\buff4_2.jpg", #149
+            r".\assets\buff_image\buff1\buff1_info_en.png", r".\assets\buff_image\buff1\buff1_info_vi.png", #151
+            r".\assets\buff_image\buff2\buff2_info_en.png", r".\assets\buff_image\buff2\buff2_info_vi.png", #153
+            r".\assets\buff_image\buff3\buff3_info_en.png", r".\assets\buff_image\buff3\buff3_info_vi.png", #155
+            r".\assets\buff_image\buff4\buff4_info_en.png", r".\assets\buff_image\buff4\buff4_info_vi.png", #157
             ]
