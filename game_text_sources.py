@@ -101,7 +101,7 @@ lg_list=['English','Tiếng Việt', #0
          'File text', 'Tệp văn bản', #120
          'Save image as (obligatory)', 'Lưu ảnh thành (bắt buộc)', #122
          'BACK', 'QUAY LẠI', #124
-         'SAVE TO TEXT', 'LƯU THÀNH VĂN BẢN', #126
+         'EXPORT TO TEXT', 'XUẤT SANG VĂN BẢN', #126
          'You bought that buff!', 'Bạn đã mua bùa tăng cường đó rồi!', #128
          'SPEED+PROMAX', 'TỐCĐỘ+PROMAX', #130
          'Pay2Win', 'Nạp VIP', #132
