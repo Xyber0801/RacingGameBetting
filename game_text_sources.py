@@ -36,6 +36,7 @@ actual_buff=0 #Chỉ số buff đã mua
 chose_buff=False #Kích hoạt cửa sổ khi đã mua trùng buff
 get_money=False #Kích hoạt minigame khi không đủ tiền trong shop
 minigame_active=False #Kích hoạt minigame
+minigame_ban = False #Kích hoạt minigame ban
 clicked=False #Biến nhấp chuột trong class button
 lg_list=['English','Tiếng Việt', #0
          'Play', 'Chơi', #2
@@ -106,6 +107,7 @@ lg_list=['English','Tiếng Việt', #0
          'Pay2Win', 'Nạp VIP', #132
          'Cleanse', 'Thanh tẩy', #134
          'Gambling Glory', 'Tài xỉu 88', #136
+         'You must have fewer than $50 to play minigames!', 'Bạn cần có ít hơn $50 để chơi minigame!', #138
          ] 
 character_name=['PyBird','PyCat','PyDog','PyBear','PyFox','PyChibi Archer','PyChibi Enchantress','PyChibi Knight','PyChibi Swordsman',
                 'PyChibi Wizard','PyArcher','PyCommander','PyBlueKnight','PyRedKnight','PySamurai','PyKarasu Tengu','PyKitsune',

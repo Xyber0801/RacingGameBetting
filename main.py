@@ -8,7 +8,7 @@ from Login import Logingin
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGHT))
-pygame.display.set_caption("Racing")
+pygame.display.set_caption("Racetrack Tycoon")
 
 pygame.key.set_repeat(200, 25)
 

@@ -18,7 +18,7 @@ pygame.mixer.pre_init(frequency=44100,size=-16,channels=2,buffer=512)
 pygame.init()
 clock=pygame.time.Clock()
 #Tiêu đề, cửa sổ game, phông chữ
-pygame.display.set_caption('Menu')
+pygame.display.set_caption("Racetrack Tycoon")
 font=pygame.font.SysFont('Constantia',35)
 screen=pygame.display.set_mode((1280,720))
 #Background
@@ -134,10 +134,11 @@ def draw_rect(x,y,width,height,type,text_color,text_dis,text):
     #Hàm màn hình menu
 def menu_display():
     global menu_active, play_button_active, history_button_active, setting_button_active, shop_button_active, minigame_active
+
     play=button(460,270,360,80,1,22.5,lg_list[2])
     history=button(460,370,360,80,1,22.5,lg_list[4])
     setting=button(460,470,360,80,1,22.5,lg_list[6])
-    quit=button(460,570,360,80,1,22.5,lg_list[8])
+    quit_button=button(460,570,360,80,1,22.5,lg_list[8])
     shop=button(1024,16,240,40,1,2.5,lg_list[10])
     mini_game=button(1024,76,240,40,1,2.5,lg_list[12])
     if play.draw_button():
@@ -149,17 +150,33 @@ def menu_display():
     if setting.draw_button():
         menu_active=False
         setting_button_active=True
-    if quit.draw_button():
-        SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, gts.history_list, c.username)
-        pygame.quit()
-        sys.exit()
+    
     if shop.draw_button():
         menu_active=False
         shop_button_active=True
     if mini_game.draw_button():
-        menu_active=False
-        minigame_active=True
-    #Hàm chọn môi trường
+        if (c.money < 50):
+            gts.minigame_ban = False
+            menu_active=False
+            minigame_active=True
+        else:
+            gts.minigame_ban = True
+
+    ok=button(540,600,200,40,1,2.5,'OK')
+    if gts.minigame_ban:
+        draw_rect(240,450,800,240,113,(0,0,0),30,lg_list[138])
+        if ok.draw_button():
+            print("OK")
+            minigame_active=False
+            gts.minigame_ban = False
+            menu_active=True
+    else:
+        if quit_button.draw_button():
+            SaveGame(c.money, c.language, c.selected_buff, c.winrate, c.total_games, gts.history_list, c.username)
+            pygame.quit()
+            quit()
+
+#Hàm chọn môi trường
 def environment_display():
     global menu_active, play_button_active, ev_choosing, ev
     ev1=button(29,388.25,388,80,1,22.5,lg_list[16])
@@ -658,7 +675,6 @@ def menu():
         go_to_distance_selection()
     pygame.mixer_music.load(r".\assets\music\menu_music.mp3")
     pygame.mixer_music.play(-1, fade_ms=1500)
-
     while menu_running:
         clock.tick(60)       
         for event in pygame.event.get():
