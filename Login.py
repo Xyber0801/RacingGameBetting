@@ -13,6 +13,7 @@ from tkinter.filedialog import askopenfilename
 import game_text_sources as gts
 import ast
 
+import re
 
 gc = gspread.service_account("./assets/api_key/creeee.json")
 
@@ -55,6 +56,10 @@ def Secure(password):
   string2 = hash(1/float(string2)) 
   return str(string2)
 
+def is_valid_email(email):
+    email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    return bool(re.match(email_regex, email))
+
 #Hàm đăng nhập
 def Logingin():
     '''
@@ -87,6 +92,9 @@ def Logingin():
     while running:
         event, values = window.read()
         if event == "Login":
+            if values["username"] == "" or values["password"] == "":
+                window["confirm"].update("Please enter your username and password")
+                continue
             soldier = 0
             row = 1
             usname = worksheet.cell(row, USERNAME_COLUMN).value
@@ -165,6 +173,12 @@ def Registerin():
             window.close()
             break
         if event == "Create an account":
+            if values["email"] == "" or values["username"] == "" or values["password"] == "" or values["confirm"] == "":
+                sg.popup("Please enter all the fields")
+                continue
+            if not(is_valid_email(values["email"])):
+                sg.popup("Please enter a valid email address")
+                continue
             if values["password"] == values["confirm"]:
                 soldier = 0
                 row = 1
@@ -246,6 +260,9 @@ def FaceIDLogin():
             window["confirm"].update("Face detected. Press login to continue.")
             inputedPic_encoding = face_recognition.face_encodings (inputedPic)[0]
         if event == "Login":
+            if values["username"] == "":
+                window["confirm"].update("Please enter your username")
+                continue
             soldier = 0
             row = 1
             usname = worksheet.cell(row, USERNAME_COLUMN).value
@@ -308,6 +325,9 @@ def FaceIDRegisterin():
             inputedPic = face_recognition.load_image_file(askopenfilename())
             inputedPic_encoding = str(face_recognition.face_encodings (inputedPic)[0])
         if event == "Register":
+            if values["username"] == "":
+                sg.popup("Please enter your username")
+                continue
             soldier = 0
             row = 1
             usname = worksheet.cell(row, USERNAME_COLUMN).value

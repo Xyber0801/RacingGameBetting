@@ -9,6 +9,7 @@ import leaderboard
 import pygame_textinput
 from i18n import I18N
 from Login import SaveGame
+import utils
 global _
 
 class CoreGame:
@@ -83,7 +84,8 @@ class GameManager:
     
     font = pygame.font.SysFont("Constantia",32)
 
-    text_manager = pygame_textinput.TextInputManager(validator=lambda text: len(text) <= 7)
+
+    text_manager = pygame_textinput.TextInputManager(validator=lambda text: len(text) <= 7 and utils.isEnglish(text))
     textinput = pygame_textinput.TextInputVisualizer(text_manager, antialias=True, font_color=(0, 0, 0), cursor_color=(255, 255, 255), font_object=font)
     # A group of all the racers
     racers = pygame.sprite.Group()
@@ -126,10 +128,12 @@ class GameManager:
             for event in CoreGame.events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:  # Update racer's name on Enter key press
-                        GameManager.renaming_who.name = GameManager.textinput.value
+                        if GameManager.textinput.value != '':
+                            GameManager.renaming_who.name = GameManager.textinput.value
                         GameManager.textinput.value = ""
                         GameManager.renaming = False
                         break
+                        
                     elif event.key == pygame.K_ESCAPE:  # Cancel renaming on Escape key press
                         GameManager.renaming = False
                         break

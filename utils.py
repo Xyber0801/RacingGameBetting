@@ -34,3 +34,12 @@ def renderTextCenteredAt(text, font, colour, x, y, screen, allowed_width):
         screen.blit(font_surface, (tx, ty))
 
         y_offset += fh
+
+
+def isEnglish(s):
+    try:
+        s.encode(encoding='utf-8').decode('ascii')
+    except UnicodeDecodeError:
+        return False
+    else:
+        return True

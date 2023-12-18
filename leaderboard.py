@@ -237,12 +237,8 @@ def main_BXH(finished_racers, player_racer): #main BXH screen
                                                                       filetypes=[
                                                                           ("PNG file", ".png"),
                                                                       ],title=g.lg_list[122])
-                    # Save image
-                    while not path or os.path.splitext(path)[1] != ".png":
-                        path = filedialog.asksaveasfilename(defaultextension='.png',
-                                                                      filetypes=[
-                                                                          ("PNG file", ".png"),
-                                                                      ],title=g.lg_list[122])
+                    if not path:
+                        continue
                     pygame.image.save(pct, path)
                     
                     
